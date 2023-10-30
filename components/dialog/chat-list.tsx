@@ -109,7 +109,7 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
                 ref={index === currentIndex ? currentRef : undefined}
                 onClick={() => onSelect(index)}
                 className={clsx(
-                  "h-18 hover-trigger mb-2 p-4 last:mb-0 hover:bg-secondary",
+                  "h-18 hover-trigger mb-2 p-4 last:mb-0 hover:bg-secondary transition-colors",
                   index === currentIndex &&
                     "border-transparent shadow-none outline",
                 )}
@@ -132,7 +132,6 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
                       trigger={
                         <Button
                           size="sm"
-                          variant={"outline"}
                           className="hover-show"
                           onClick={(e) => e.stopPropagation()}
                         >

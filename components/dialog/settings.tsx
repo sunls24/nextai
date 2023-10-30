@@ -201,17 +201,17 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             )}
           </Card>
         </ScrollArea>
-        <div className="flex items-center gap-1">
+        <div className="flex justify-center sm:justify-start">
           <Button
-            size="icon"
             variant="ghost"
+            className="px-2"
             onClick={() => open("https://github.com/sunls24/chat-ai")}
           >
             <Github size={20} strokeWidth={1.5} />
+            <span className="ml-1 text-muted-foreground underline underline-offset-2">
+              v{VERSION}
+            </span>
           </Button>
-          <span className="text-muted-foreground underline underline-offset-2">
-            v{VERSION}
-          </span>
         </div>
       </SheetContent>
     </Sheet>
