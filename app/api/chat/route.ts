@@ -10,8 +10,7 @@ import { apiKeyPool } from "@/lib/pool";
 export const runtime = "edge";
 
 apiKeyPool.update(process.env.OPENAI_API_KEY ?? "");
-
-const openai = new OpenAI();
+const openai = new OpenAI({ apiKey: "" });
 
 export async function POST(req: Request) {
   const { messages, config, contextIndex } = await req.json();
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
     messages,
   };
   body.functions!.length || delete body.functions;
-  openai.apiKey = apiKeyPool.getNext(apiConfig.apiKey);
+  openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
   try {
     const response = await openai.chat.completions.create(body);
     const stream = OpenAIStream(response, {
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
         args.config = plugins[name];
         const result = await onFunctionCall(name, args);
         const newMessages = createFunctionCallMessages(result);
-        openai.apiKey = apiKeyPool.getNext(apiConfig.apiKey);
+        openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
         return openai.chat.completions.create({
           ...body,
           messages: [...messages, ...newMessages],
