@@ -2,7 +2,6 @@ import React from "react";
 import { GalleryVertical, SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeaderTopic from "@/components/header-topic";
-import { ModeToggle } from "@/components/mode-toggle";
 import ChatList from "@/components/dialog/chat-list";
 import Settings from "@/components/dialog/settings";
 
@@ -18,7 +17,6 @@ function Header() {
         }
       />
       <span className="flex-1" />
-      <ModeToggle />
       <Settings
         trigger={
           <Button variant="ghost" size="icon">

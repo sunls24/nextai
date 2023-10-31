@@ -22,7 +22,7 @@ export function ModeToggle() {
           <MoonStar size={22} strokeWidth={1.5} className="hidden dark:block" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center">
+      <DropdownMenuContent align="start">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun size={20} strokeWidth={1.5} className="mr-2" />
           Light

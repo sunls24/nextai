@@ -21,6 +21,7 @@ import TooltipWrap from "@/components/tooltip-wrap";
 import SettingsModel from "@/components/settings-model";
 import SettingsTemperature from "@/components/settings-temperature";
 import SettingsGoogle from "@/components/settings-google";
+import { ModeToggle } from "@/components/mode-toggle";
 
 function Settings({ trigger }: { trigger: React.ReactNode }) {
   const updateConfig = useConfig((state) => state.Update);
@@ -201,7 +202,8 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             )}
           </Card>
         </ScrollArea>
-        <div className="flex justify-center sm:justify-start">
+        <div className="flex justify-between">
+          <ModeToggle />
           <Button
             variant="ghost"
             className="px-2"
