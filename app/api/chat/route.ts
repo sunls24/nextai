@@ -5,14 +5,12 @@ import { NextResponse } from "next/server";
 import { ApiConfig, Plugins } from "@/lib/store/config";
 import { functions, onFunctionCall } from "@/app/api/chat/functions";
 import { getLocaleTime } from "@/lib/utils";
-import { ApiKeyPool } from "@/lib/pool";
-import { SEPARATOR } from "@/lib/constants";
+import { apiKeyPool } from "@/lib/pool";
 
 export const runtime = "edge";
 
-const keyPool = new ApiKeyPool(
-  (process.env.OPENAI_API_KEY ?? "").split(SEPARATOR),
-);
+apiKeyPool.update(process.env.OPENAI_API_KEY ?? "");
+
 const openai = new OpenAI();
 
 export async function POST(req: Request) {
@@ -32,7 +30,7 @@ export async function POST(req: Request) {
     messages,
   };
   body.functions!.length || delete body.functions;
-  openai.apiKey = keyPool.getNext(apiConfig.apiKey);
+  openai.apiKey = apiKeyPool.getNext(apiConfig.apiKey);
   try {
     const response = await openai.chat.completions.create(body);
     const stream = OpenAIStream(response, {
@@ -43,7 +41,7 @@ export async function POST(req: Request) {
         args.config = plugins[name];
         const result = await onFunctionCall(name, args);
         const newMessages = createFunctionCallMessages(result);
-        openai.apiKey = keyPool.getNext(apiConfig.apiKey);
+        openai.apiKey = apiKeyPool.getNext(apiConfig.apiKey);
         return openai.chat.completions.create({
           ...body,
           messages: [...messages, ...newMessages],
