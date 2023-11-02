@@ -23,7 +23,7 @@
     "ai": "^2.2.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.290.0",
+    "lucide-react": "^0.291.0",
     "mitt": "^3.0.1",
     "next": "^14.0.1",
     "next-themes": "^0.2.1",
@@ -37,12 +37,12 @@
     "react-textarea-autosize": "^8.5.3",
     "remark-gfm": "3.0.1",
     "tailwind-merge": "^2.0.0",
-    "zustand": "^4.4.5"
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.8.10",
-    "@types/react": "^18.2.33",
+    "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
     "@types/react-syntax-highlighter": "^15.5.9",
     "autoprefixer": "^10.4.16",
