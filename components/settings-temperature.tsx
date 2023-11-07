@@ -10,12 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function SettingsTemperature({ className }: { className?: string }) {
   const updateConfig = useConfig((state) => state.Update);
-  const temperatureConfig = useConfig((state) => state.apiConfig.temperature);
-  const [temperature, setTemperature] = useState(temperatureConfig);
+  const temperatureCfg = useConfig((state) => state.apiConfig.temperature);
+  const [temperature, setTemperature] = useState(temperatureCfg);
 
   useEffect(() => {
-    temperature !== temperatureConfig && setTemperature(temperatureConfig);
-  }, [temperatureConfig]);
+    temperature !== temperatureCfg && setTemperature(temperatureCfg);
+  }, [temperatureCfg]);
 
   function onTemperatureChange(value: number) {
     setTemperature(value);

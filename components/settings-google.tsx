@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useConfig } from "@/lib/store/config";
@@ -8,9 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function SettingsGoogle({ className }: { className?: string }) {
   const updateConfig = useConfig((state) => state.Update);
-  const [searchEnable, setSearchEnable] = useState(
-    useConfig((state) => state.apiConfig.plugins.googleSearch.enabled),
-  );
+  const searchEnableCfg =useConfig((state) => state.apiConfig.plugins.googleSearch.enabled)
+  const [searchEnable, setSearchEnable] = useState(searchEnableCfg);
+
+  useEffect(() => {
+    searchEnableCfg !== searchEnable && setSearchEnable(searchEnableCfg);
+  }, [searchEnableCfg]);
 
   function onGSToggle(enabled: boolean) {
     setSearchEnable(enabled);
