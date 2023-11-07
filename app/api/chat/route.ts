@@ -62,7 +62,6 @@ function systemPrompt(): CreateMessage {
   return {
     role: "system",
     content: `You are ChatGPT, a large language model trained by OpenAI.
-Knowledge cutoff: 2021-09
 Current time: ${getLocaleTime()}`,
   };
 }
