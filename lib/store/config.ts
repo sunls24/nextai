@@ -12,7 +12,7 @@ export const defaultConfig = {
   autoGenerateTitle: false,
   apiConfig: {
     apiKey: "",
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-1106",
     temperature: 0.5,
     plugins: {
       googleSearch: {

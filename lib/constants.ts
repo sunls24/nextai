@@ -6,7 +6,7 @@ export enum Store {
   Config = "chat-next-config",
 }
 
-export const models = ["gpt-3.5-turbo", "gpt-3.5-turbo-16k"];
+export const models = ["gpt-3.5-turbo-1106"];
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;
