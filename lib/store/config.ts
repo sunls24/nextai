@@ -28,6 +28,13 @@ export const defaultConfig = {
         enabled: false,
         amapKey: "",
       },
+      imageGeneration: {
+        enabled: false,
+        // model: "dall-e-3",
+        // size: "1024x1024",
+        // hd: false,
+        // n: 1,
+      },
     },
   },
 };
@@ -52,10 +59,14 @@ export const useConfig = create<Config>()(
     {
       name: Store.Config,
       version: StoreVersion,
-      // migrate(persistedState, version) {
-      //   const state = persistedState as Config
-      //   return state
-      // },
+      migrate(persistedState, version) {
+        const state = persistedState as Config;
+        if (!state.apiConfig.plugins.imageGeneration) {
+          state.apiConfig.plugins.imageGeneration =
+            defaultConfig.apiConfig.plugins.imageGeneration;
+        }
+        return state;
+      },
     },
   ),
 );

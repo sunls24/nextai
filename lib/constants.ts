@@ -1,12 +1,12 @@
-export const StoreVersion = 2.0;
-export const VERSION = "2.0.2";
+export const StoreVersion = 2.1;
+export const VERSION = "2.1.0";
 
 export enum Store {
   Chat = "chat-next-store",
   Config = "chat-next-config",
 }
 
-export const models = ["gpt-3.5-turbo-1106"];
+export const models = ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"];
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;

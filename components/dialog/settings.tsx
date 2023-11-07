@@ -92,6 +92,17 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
     updateConfig((c) => (c.apiConfig.plugins.weatherInfo.amapKey = amapKey));
   }
 
+  const [imageGeneration, setImageGeneration] = useState(
+    useConfig((state) => state.apiConfig.plugins.imageGeneration),
+  );
+
+  function onIGToggle(enabled: boolean) {
+    setImageGeneration({ ...imageGeneration, enabled });
+    updateConfig(
+      (c) => (c.apiConfig.plugins.imageGeneration.enabled = enabled),
+    );
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
@@ -102,7 +113,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
         <ScrollArea>
           <Card className="mb-4 flex flex-col gap-4 p-4">
             <div className="flex items-center justify-between">
-              <Label className="shrink-0">API Key</Label>
+              <Label>API Key</Label>
               <Input
                 placeholder="自定义 OpenAI Api Key"
                 className="w-[70%]"
@@ -114,7 +125,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             <SettingsTemperature />
             <Separator />
             <div className="flex h-9 items-center justify-between">
-              <Label className="shrink-0">自动生成标题</Label>
+              <Label>自动生成标题</Label>
               <Switch checked={autoTitle} onCheckedChange={onAutoTitleToggle} />
             </div>
           </Card>
@@ -125,7 +136,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             {searchEnabled && (
               <>
                 <div className="flex items-center justify-between">
-                  <Label className="shrink-0">API Key</Label>
+                  <Label>API Key</Label>
                   <Input
                     placeholder="自定义 Search Api Key"
                     className="w-[70%]"
@@ -136,7 +147,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label className="shrink-0">Engine ID</Label>
+                  <Label>Engine ID</Label>
                   <Input
                     placeholder="自定义 Search Engine ID"
                     className="w-[70%]"
@@ -148,10 +159,17 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
                 </div>
               </>
             )}
-
             <Separator />
             <div className="flex h-9 items-center justify-between">
-              <Label className="shrink-0">浏览网页</Label>
+              <Label>图像生成</Label>
+              <Switch
+                checked={imageGeneration.enabled}
+                onCheckedChange={onIGToggle}
+              />
+            </div>
+            <Separator />
+            <div className="flex h-9 items-center justify-between">
+              <Label>浏览网页</Label>
               <Switch
                 checked={browseWebsite.enabled}
                 onCheckedChange={onBWToggle}
@@ -160,7 +178,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             {browseWebsite.enabled && (
               <>
                 <div className="flex items-center gap-2">
-                  <Label className="shrink-0">最大长度</Label>
+                  <Label>最大长度</Label>
                   <TooltipWrap
                     trigger={<Info size={16} />}
                     content="避免触发 Token 限制"
@@ -179,7 +197,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             )}
             <Separator />
             <div className="flex h-9 items-center justify-between">
-              <Label className="shrink-0">查询天气</Label>
+              <Label>查询天气</Label>
               <Switch
                 checked={weatherInfo.enabled}
                 onCheckedChange={onWIToggle}
@@ -188,7 +206,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             {weatherInfo.enabled && (
               <>
                 <div className="flex items-center justify-between">
-                  <Label className="shrink-0">高德 Key</Label>
+                  <Label>高德 Key</Label>
                   <Input
                     placeholder="自定义高德 Key"
                     className="w-[70%]"

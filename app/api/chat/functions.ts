@@ -1,5 +1,8 @@
 import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { NodeHtmlMarkdown } from "node-html-markdown";
+import OpenAI from "openai";
+
+export const openai = new OpenAI({ apiKey: "" });
 
 interface FunctionCall {
   function: ChatCompletionCreateParams.Function;
@@ -38,7 +41,7 @@ const functionMap: Record<string, FunctionCall> = {
         const result = await res.json();
         return result.items ?? nothing;
       } catch (err: any) {
-        console.log(`- ${name} ${args.keyword} ${err.cause ?? err}`);
+        console.log(`- ${err.cause ?? err} [${name} ${args.keyword}]`);
         return nothing;
       }
     },
@@ -72,7 +75,7 @@ const functionMap: Record<string, FunctionCall> = {
         }
         return result;
       } catch (err: any) {
-        console.log(`- ${name} ${url} ${err.cause ?? err}`);
+        console.log(`- ${err.cause ?? err} [${name} ${url}]`);
         return "Unable to access this website";
       }
     },
@@ -124,8 +127,46 @@ const functionMap: Record<string, FunctionCall> = {
         }
         return result;
       } catch (err: any) {
-        console.log(`- ${name} ${args.location} ${err.cause ?? err}`);
+        console.log(`- ${err.cause ?? err} [${name} ${args.location}]`);
         return nothing;
+      }
+    },
+  },
+  imageGeneration: {
+    function: {
+      name: "imageGeneration",
+      description:
+        "Generate image by prompt. Returns the url of the image, please use md format to display image",
+      parameters: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+          style: {
+            type: "string",
+            description:
+              "The style of the generated images. Must be one of vivid or natural",
+          },
+        },
+        required: ["prompt"],
+      },
+    },
+    call: async (name, args) => {
+      const prompt = args.prompt as string;
+      try {
+        const response = await openai.images.generate({
+          prompt: prompt,
+          // @ts-ignore
+          style: args.style,
+          model: "dall-e-3",
+          size: "1024x1024",
+          n: 1,
+        });
+        return response.data[0].url;
+      } catch (err: any) {
+        console.log(`- ${err.cause ?? err} [${name} ${prompt}]`);
+        return "Generate failure";
       }
     },
   },

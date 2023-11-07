@@ -3,14 +3,13 @@ import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { CreateMessage, OpenAIStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
 import { ApiConfig, Plugins } from "@/lib/store/config";
-import { functions, onFunctionCall } from "@/app/api/chat/functions";
+import { functions, onFunctionCall, openai } from "@/app/api/chat/functions";
 import { getLocaleTime } from "@/lib/utils";
 import { apiKeyPool } from "@/lib/pool";
 
 export const runtime = "edge";
 
 apiKeyPool.update(process.env.OPENAI_API_KEY ?? "");
-const openai = new OpenAI({ apiKey: "" });
 
 export async function POST(req: Request) {
   const { messages, config, contextIndex } = await req.json();
@@ -32,6 +31,7 @@ export async function POST(req: Request) {
   openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
   try {
     const response = await openai.chat.completions.create(body);
+    // @ts-ignore
     const stream = OpenAIStream(response, {
       experimental_onFunctionCall: async (
         { name, arguments: args },
