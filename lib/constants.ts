@@ -1,5 +1,5 @@
 export const StoreVersion = 2.0;
-export const VERSION = "2.0.1";
+export const VERSION = "2.0.2";
 
 export enum Store {
   Chat = "chat-next-store",
