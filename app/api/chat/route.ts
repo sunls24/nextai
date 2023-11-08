@@ -38,7 +38,10 @@ export async function POST(req: Request) {
       ) => {
         args.config = plugins[name];
         const result = await onFunctionCall(name, args);
-        const newMessages = createFunctionCallMessages(result);
+        const newMessages = createFunctionCallMessages(result.result ?? result);
+        if (result.system) {
+          newMessages.push({ role: "system", content: result.system });
+        }
         openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
         return openai.chat.completions.create({
           ...body,

@@ -135,8 +135,7 @@ const functionMap: Record<string, FunctionCall> = {
   imageGeneration: {
     function: {
       name: "imageGeneration",
-      description:
-        "Generate image by prompt. Returns the url of the image, please use Markdown format to display image",
+      description: "Generate image by prompt",
       parameters: {
         type: "object",
         properties: {
@@ -146,7 +145,7 @@ const functionMap: Record<string, FunctionCall> = {
           style: {
             type: "string",
             description:
-              "The style of the generated images. Must be one of vivid or natural",
+              "The style of the generated images, must be one of 'vivid' or 'natural'",
           },
         },
         required: ["prompt"],
@@ -159,11 +158,16 @@ const functionMap: Record<string, FunctionCall> = {
           prompt: prompt,
           // @ts-ignore
           style: args.style,
+          // response_format: "b64_json",
           model: "dall-e-3",
           size: "1024x1024",
           n: 1,
         });
-        return response.data[0].url;
+        return {
+          result: { url: response.data[0].url },
+          system:
+            "Display this image using full url and md format and remind user that image will expire after an hour",
+        };
       } catch (err: any) {
         console.log(`- ${err.cause ?? err} [${name} ${prompt}]`);
         return "Generate failure";
