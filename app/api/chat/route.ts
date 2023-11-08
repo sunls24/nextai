@@ -31,7 +31,6 @@ export async function POST(req: Request) {
   openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
   try {
     const response = await openai.chat.completions.create(body);
-    // @ts-ignore
     const stream = OpenAIStream(response, {
       experimental_onFunctionCall: async (
         { name, arguments: args },

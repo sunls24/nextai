@@ -136,7 +136,7 @@ const functionMap: Record<string, FunctionCall> = {
     function: {
       name: "imageGeneration",
       description:
-        "Generate image by prompt. Returns the url of the image, please use md format to display image",
+        "Generate image by prompt. Returns the url of the image, please use Markdown format to display image",
       parameters: {
         type: "object",
         properties: {
