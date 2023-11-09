@@ -1,6 +1,8 @@
 export const StoreVersion = 2.1;
 export const VERSION = "2.1.0";
 
+export const OPENAI_API_KEY = "OPENAI_API_KEY";
+
 export enum Store {
   Chat = "chat-next-store",
   Config = "chat-next-config",
