@@ -1,6 +1,12 @@
-# 📌 概述
+# 💬 概述
 
-**Chat AI:** 一个简单而优雅的 AI 聊天程序
+一个简单而优雅的 AI 聊天程序
+
+支持 ChatGPT **函数调用：**
+- Google 搜索 (使用`Programmable Search Engine`)
+- 图像生成 (调用`DALL·E 3`模型)
+- 浏览网页 (使用`fetch`)
+- 查询天气 (使用高德开放平台)
 
 ## ⚙️ 设置
 
@@ -9,7 +15,7 @@
 - `OPENAI_API_KEY`：不必多说，懂的都懂
 - `GOOGLE_API_KEY`：用于 Google 搜索插件（可选）
 - `GOOGLE_ENGINE_ID`：用于 Google 搜索插件（可选）
-- `AMAP_KEY`：用于查询天气插件，_(使用高德开放平台)_（可选）
+- `AMAP_KEY`：高德开放平台 Key（可选）
 
 ## 🚀 本地运行
 
@@ -25,9 +31,12 @@ git clone https://github.com/sunls24/chat-ai
 pnpm install
 ```
 
-3. 开发模式：
+3. 本地运行：
 
 ```bash
+# 设置环境变量 OPENAI_API_KEY=sk-xxx
+touch .env.local
+# 本地运行
 pnpm run dev
 ```
 
