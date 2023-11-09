@@ -18,9 +18,9 @@ export async function GET() {
   for (const key of keyList) {
     openai.apiKey = key;
     try {
-      await openai.completions.create({
-        prompt: "hello",
-        model: "gpt-3.5-turbo-instruct",
+      await openai.chat.completions.create({
+        messages: [{ role: "user", content: "hello" }],
+        model: "gpt-3.5-turbo",
         max_tokens: 1,
       });
       newList.push(key);
