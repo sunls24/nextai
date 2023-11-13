@@ -45,5 +45,3 @@ export class ApiKeyPool {
     }
   }
 }
-
-export const apiKeyPool = new ApiKeyPool();

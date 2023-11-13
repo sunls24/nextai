@@ -3,13 +3,13 @@ import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { CreateMessage, OpenAIStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
 import { ApiConfig, Plugins } from "@/lib/store/config";
-import { functions, onFunctionCall, openai } from "@/app/api/chat/functions";
+import { functions, onFunctionCall } from "@/app/api/chat/functions";
 import { getLocaleTime } from "@/lib/utils";
-import { apiKeyPool } from "@/lib/pool";
+import { getOpenAI, init } from "../openai";
 
 export const runtime = "edge";
 
-apiKeyPool.update(process.env.OPENAI_API_KEY ?? "");
+init(process.env.OPENAI_API_KEY ?? "");
 
 export async function POST(req: Request) {
   const { messages, config, contextIndex } = await req.json();
@@ -28,9 +28,10 @@ export async function POST(req: Request) {
     messages,
   };
   body.functions!.length || delete body.functions;
-  openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
   try {
-    const response = await openai.chat.completions.create(body);
+    const response = await (
+      await getOpenAI(apiConfig.apiKey)
+    ).chat.completions.create(body);
     const stream = OpenAIStream(response, {
       experimental_onFunctionCall: async (
         { name, arguments: args },
@@ -42,8 +43,7 @@ export async function POST(req: Request) {
         if (result.system) {
           newMessages.push({ role: "system", content: result.system });
         }
-        openai.apiKey = await apiKeyPool.getNextEdge(apiConfig.apiKey);
-        return openai.chat.completions.create({
+        return (await getOpenAI(apiConfig.apiKey)).chat.completions.create({
           ...body,
           messages: [...messages, ...newMessages],
         });

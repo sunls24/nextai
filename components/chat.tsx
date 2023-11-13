@@ -9,8 +9,10 @@ import { PROMPT_TOPIC } from "@/lib/constants";
 import { trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config";
 import { emitter, mittKey } from "@/lib/mitt";
-import { apiKeyPool } from "@/lib/pool";
 import { Separator } from "@/components/ui/separator";
+import { ApiKeyPool } from "@/lib/pool";
+
+const apiKeyPool = new ApiKeyPool();
 
 function Chat() {
   const [savedMessage, saveMessage, editMessage] = useChatStore((state) => [

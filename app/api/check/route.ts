@@ -3,6 +3,7 @@ import { get } from "@vercel/edge-config";
 import { OPENAI_API_KEY } from "@/lib/constants";
 import OpenAI from "openai";
 import { SEPARATOR } from "@/lib/pool";
+import { getOpenAI } from "@/app/api/openai";
 
 export async function GET() {
   if (!process.env.EDGE_CONFIG || !process.env.API_TOKEN) {
@@ -14,11 +15,11 @@ export async function GET() {
   }
   const keyList = (keys as string).split(SEPARATOR);
   const newList = [];
-  const openai = new OpenAI({ apiKey: "" });
   for (const key of keyList) {
-    openai.apiKey = key;
     try {
-      await openai.chat.completions.create({
+      const res = await (
+        await getOpenAI(key)
+      ).chat.completions.create({
         messages: [{ role: "user", content: "hello" }],
         model: "gpt-3.5-turbo",
         max_tokens: 1,
