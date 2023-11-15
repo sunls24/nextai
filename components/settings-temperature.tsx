@@ -8,7 +8,13 @@ import { clsx } from "clsx";
 import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function SettingsTemperature({ className }: { className?: string }) {
+function SettingsTemperature({
+  className,
+  disabled = false,
+}: {
+  className?: string;
+  disabled?: boolean;
+}) {
   const updateConfig = useConfig((state) => state.Update);
   const temperatureCfg = useConfig((state) => state.apiConfig.temperature);
   const [temperature, setTemperature] = useState(temperatureCfg);
@@ -38,6 +44,7 @@ function SettingsTemperature({ className }: { className?: string }) {
           className="w-[50%]"
           value={[temperature]}
           onValueChange={(v) => onTemperatureChange(v[0])}
+          disabled={disabled}
         />
       </Mounted>
     </div>

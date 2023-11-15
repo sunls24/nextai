@@ -13,7 +13,13 @@ import { clsx } from "clsx";
 import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function SettingsModel({ className }: { className?: string }) {
+function SettingsModel({
+  className,
+  disabled = false,
+}: {
+  className?: string;
+  disabled?: boolean;
+}) {
   const updateConfig = useConfig((state) => state.Update);
   const modelConfig = useConfig((state) => state.apiConfig.model);
   const [model, setModel] = useState(modelConfig);
@@ -31,7 +37,7 @@ function SettingsModel({ className }: { className?: string }) {
     <div className={clsx("flex items-center justify-between", className)}>
       <Label className="shrink-0">Model</Label>
       <Mounted fallback={<Skeleton className="h-9 w-[180px]" />}>
-        <Select value={model} onValueChange={onModelChange}>
+        <Select value={model} onValueChange={onModelChange} disabled={disabled}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Model" />
           </SelectTrigger>

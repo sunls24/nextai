@@ -5,8 +5,10 @@ import { Separator } from "@/components/ui/separator";
 import SettingsTemperature from "@/components/settings-temperature";
 import SettingsGoogle from "@/components/settings-google";
 import { Settings2 } from "lucide-react";
+import { useConfig } from "@/lib/store/config";
 
 function SettingsQuick() {
+  const loginEnable = useConfig((state) => state.login.enable);
   return (
     <Card className="mb-3 flex flex-col gap-4 p-4">
       <div className="flex justify-center gap-1 md:justify-start">
@@ -15,9 +17,15 @@ function SettingsQuick() {
       </div>
       <Separator />
       <div className="flex flex-col gap-4 md:flex-row md:justify-between">
-        <SettingsModel className="md:max-w-xs md:flex-1" />
-        <SettingsTemperature className="md:max-w-xs md:flex-1" />
-        <SettingsGoogle className="md:w-[180px]" />
+        <SettingsModel
+          className="md:max-w-xs md:flex-1"
+          disabled={loginEnable}
+        />
+        <SettingsTemperature
+          className="md:max-w-xs md:flex-1"
+          disabled={loginEnable}
+        />
+        <SettingsGoogle className="md:w-[180px]" disabled={loginEnable} />
       </div>
     </Card>
   );

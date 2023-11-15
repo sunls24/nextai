@@ -10,6 +10,10 @@ export interface Plugins {
 
 export const defaultConfig = {
   autoGenerateTitle: false,
+  login: {
+    enable: false,
+    data: undefined as any,
+  },
   apiConfig: {
     apiKey: "",
     model: "gpt-3.5-turbo-1106",

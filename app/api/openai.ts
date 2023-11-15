@@ -17,5 +17,5 @@ export async function getOpenAI(key?: string): Promise<OpenAI> {
 }
 
 function isApiKey(key: string) {
-  return key.startsWith("sk-");
+  return key.length === 0 || key.startsWith("sk-");
 }
