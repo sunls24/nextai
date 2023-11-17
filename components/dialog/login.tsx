@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { RefreshCcw } from "lucide-react";
 import toast from "react-hot-toast";
 import { useConfig } from "@/lib/store/config";
+import { fetchForm, tokenRegister } from "@/lib/utils";
 
 function Login({
   trigger,
@@ -34,25 +35,20 @@ function Login({
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/reverse/auth/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          username: username,
-          password: password,
-        }),
+      const res = await fetchForm("/api/reverse/auth/login", {
+        username: username,
+        password: password,
       });
 
       const body = await res.json();
-      if (body.msg) {
-        throw new Error(body.msg);
+      if (body.detail) {
+        throw new Error(body.detail);
       }
-      updateCfg((cfg) => {
-        cfg.login = {
-          enable: true,
-          data: body,
-        };
-        cfg.apiConfig.apiKey = body.accessToken;
+      await tokenRegister({
+        username,
+        updateCfg,
+        accessToken: body.access_token,
+        sessionToken: body.session_token,
       });
       toast.success("登录成功");
       setOpen(false);
@@ -93,6 +89,7 @@ function Login({
           />
           <Label>密码</Label>
           <Input
+            type="password"
             disabled={loading}
             className="col-span-3"
             value={password}

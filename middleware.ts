@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   if (!REVERSE_HOST) {
     return NextResponse.next();
   }
-  const to = `${REVERSE_HOST}${request.nextUrl.pathname.substring(12)}`;
-  console.log("rewrite", request.nextUrl.pathname, "->", to);
-  return NextResponse.rewrite(to);
+  return NextResponse.rewrite(
+    `${REVERSE_HOST}${request.nextUrl.pathname.substring(12)}`,
+  );
 }

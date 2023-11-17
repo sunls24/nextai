@@ -8,7 +8,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Card } from "@/components/ui/card";
-import { ClipboardCopy, Github, Info, LogOut, Mail } from "lucide-react";
+import {
+  ClipboardCopy,
+  Github,
+  Info,
+  LogOut,
+  Mail,
+  RefreshCcw,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -23,8 +30,14 @@ import SettingsTemperature from "@/components/settings-temperature";
 import SettingsGoogle from "@/components/settings-google";
 import { ModeToggle } from "@/components/mode-toggle";
 import Login from "@/components/dialog/login";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
+import {
+  copyToClipboard,
+  fetchForm,
+  fmtLocaleTime,
+  tokenRegister,
+} from "@/lib/utils";
+import toast from "react-hot-toast";
+import { clsx } from "clsx";
 
 function Settings({ trigger }: { trigger: React.ReactNode }) {
   const updateConfig = useConfig((state) => state.Update);
@@ -112,6 +125,10 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
     copyToClipboard(loginCfg.data.accessToken);
   }
 
+  function onShareTokenCopy() {
+    copyToClipboard(loginCfg.data.shareToken);
+  }
+
   function onLogout() {
     updateConfig((cfg) => {
       cfg.login = {
@@ -121,6 +138,33 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
       cfg.apiConfig.apiKey = "";
     });
     setApiKey("");
+  }
+
+  const [loading, setLoading] = useState(false);
+
+  async function onRefreshToken() {
+    setLoading(true);
+    try {
+      const res = await fetchForm("/api/reverse/auth/session", {
+        session_token: loginCfg.data.sessionToken,
+      });
+
+      const body = await res.json();
+      if (body.detail) {
+        throw new Error(body.detail);
+      }
+      await tokenRegister({
+        username: loginCfg.data.email,
+        updateCfg: updateConfig,
+        accessToken: body.access_token,
+        sessionToken: body.session_token,
+      });
+      toast.success("Token 已更新");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -135,52 +179,81 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             {loginCfg.enable ? (
               <>
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium">OpenAI 账号已登录</h3>
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-medium">OpenAI 账号已登录</h3>
+                    <span className="text-xs text-muted-foreground">
+                      By
+                      <a
+                        target="_blank"
+                        href="https://ai.fakeopen.com"
+                        className="ml-1 underline underline-offset-2"
+                      >
+                        FakeOpen Api
+                      </a>
+                    </span>
+                  </div>
                   <Button variant="ghost" onClick={onLogout}>
                     注销
                     <LogOut size={18} className="ml-1" />
                   </Button>
                 </div>
                 <Separator />
-                <div className="flex items-end">
-                  <Avatar className="mr-4 h-16 w-16">
-                    <AvatarImage src={loginCfg.data.user.image} />
-                    <AvatarFallback>OpenAI</AvatarFallback>
-                  </Avatar>
-                  <Mail strokeWidth={1.8} size={22} className="mb-1" />
-                  <span className="mb-1 ml-1 text-base font-medium">
-                    {loginCfg.data.user.email}
+                <div className="flex items-center">
+                  <Mail size={22} />
+                  <span className="ml-2 text-lg font-medium">
+                    {loginCfg.data.email}
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex h-9 items-center">
-                    <Label>AccessToken:</Label>
+                  <div className="flex h-8 items-center">
+                    <Label>ShareToken: fk-***********</Label>
                     <Button
                       variant="ghost"
-                      size="icon"
-                      className="ml-2"
+                      size="sm"
+                      className="ml-2 px-2"
+                      onClick={onShareTokenCopy}
+                    >
+                      <ClipboardCopy size={20} />
+                    </Button>
+                  </div>
+                  <div className="flex h-8 items-center">
+                    <Label>AccessToken: eyJhbG*****</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-2 px-2"
                       onClick={onTokenCopy}
                     >
                       <ClipboardCopy size={20} />
                     </Button>
-                    <span className="text-muted-foreground">点击复制</span>
                   </div>
-                  <div className="flex h-9 items-center">
+                  <div className="flex h-8 items-center">
                     <Label>过期时间：</Label>
-                    <span className="ml-2 text-muted-foreground">
-                      {fmtLocaleTime(new Date(loginCfg.data.expires))}
+                    <span className="text-muted-foreground">
+                      {fmtLocaleTime(new Date(loginCfg.data.expire * 1000))}
                     </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-2 px-2"
+                      onClick={onRefreshToken}
+                    >
+                      <RefreshCcw
+                        size={20}
+                        className={clsx(loading && "animate-spin")}
+                      />
+                    </Button>
                   </div>
                 </div>
                 <Login
-                  email={loginCfg.data.user.email}
+                  email={loginCfg.data.email}
                   trigger={<Button>重新登录</Button>}
                 />
               </>
             ) : (
               <>
                 <Login
-                  email={loginCfg.data?.user.email}
+                  email={loginCfg.data.email}
                   trigger={
                     <Button variant="secondary">使用 OpenAI 账号登录</Button>
                   }

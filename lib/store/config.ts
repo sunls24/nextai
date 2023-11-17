@@ -12,7 +12,13 @@ export const defaultConfig = {
   autoGenerateTitle: false,
   login: {
     enable: false,
-    data: undefined as any,
+    data: {
+      email: "",
+      expire: 0,
+      shareToken: "",
+      accessToken: "",
+      sessionToken: "",
+    },
   },
   apiConfig: {
     apiKey: "",
@@ -43,7 +49,7 @@ export const defaultConfig = {
   },
 };
 
-type Config = typeof defaultConfig & {
+export type Config = typeof defaultConfig & {
   Update(fn: (c: Config) => void): void;
 };
 
