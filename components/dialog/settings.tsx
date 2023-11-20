@@ -253,7 +253,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             ) : (
               <>
                 <Login
-                  email={loginCfg.data.email}
+                  email={loginCfg.data?.email}
                   trigger={
                     <Button variant="secondary">使用 OpenAI 账号登录</Button>
                   }
