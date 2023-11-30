@@ -1,5 +1,5 @@
 export const StoreVersion = 2.1;
-export const VERSION = "2.1.2";
+export const VERSION = "2.1.3";
 
 export const OPENAI_API_KEY = "OPENAI_API_KEY";
 

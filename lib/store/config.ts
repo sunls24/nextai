@@ -10,16 +10,6 @@ export interface Plugins {
 
 export const defaultConfig = {
   autoGenerateTitle: false,
-  login: {
-    enable: false,
-    data: {
-      email: "",
-      expire: 0,
-      shareToken: "",
-      accessToken: "",
-      sessionToken: "",
-    },
-  },
   apiConfig: {
     apiKey: "",
     model: "gpt-3.5-turbo-1106",
@@ -40,16 +30,12 @@ export const defaultConfig = {
       },
       imageGeneration: {
         enabled: false,
-        // model: "dall-e-3",
-        // size: "1024x1024",
-        // hd: false,
-        // n: 1,
       },
     },
   },
 };
 
-export type Config = typeof defaultConfig & {
+type Config = typeof defaultConfig & {
   Update(fn: (c: Config) => void): void;
 };
 
@@ -69,7 +55,7 @@ export const useConfig = create<Config>()(
     {
       name: Store.Config,
       version: StoreVersion,
-      migrate(persistedState, version) {
+      migrate(persistedState) {
         const state = persistedState as Config;
         if (!state.apiConfig.plugins.imageGeneration) {
           state.apiConfig.plugins.imageGeneration =

@@ -63,8 +63,6 @@ function Chat() {
     state.updateContext,
   ]);
 
-  const loginEnable = useConfig((state) => state.login.enable);
-
   const getOptions = useCallback(
     () => ({
       options: {
@@ -72,13 +70,12 @@ function Chat() {
           config: {
             ...config,
             apiKey: apiKeyPool.update(config.apiKey).getNext(),
-            model: loginEnable ? "gpt-3.5-turbo" : config.model,
           },
           contextIndex,
         },
       },
     }),
-    [config, contextIndex, loginEnable],
+    [config, contextIndex],
   );
 
   // load message
