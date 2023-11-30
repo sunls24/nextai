@@ -1,8 +1,6 @@
 import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import OpenAI from "openai";
-
-export const openai = new OpenAI({ apiKey: "" });
+import { getOpenAI } from "@/app/api/openai";
 
 interface FunctionCall {
   function: ChatCompletionCreateParams.Function;
@@ -154,7 +152,9 @@ const functionMap: Record<string, FunctionCall> = {
     call: async (name, args) => {
       const prompt = args.prompt as string;
       try {
-        const response = await openai.images.generate({
+        const response = await (
+          await getOpenAI(args.apiKey as string)
+        ).images.generate({
           prompt: prompt,
           // @ts-ignore
           style: args.style,

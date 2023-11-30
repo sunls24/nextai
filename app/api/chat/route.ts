@@ -38,6 +38,7 @@ export async function POST(req: Request) {
         createFunctionCallMessages,
       ) => {
         args.config = plugins[name];
+        args.apiKey = apiConfig.apiKey;
         const result = await onFunctionCall(name, args);
         const newMessages = createFunctionCallMessages(result.result ?? result);
         if (result.system) {
