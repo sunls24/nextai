@@ -1,78 +1,36 @@
 import { NextResponse } from "next/server";
-import { get } from "@vercel/edge-config";
-import { OPENAI_API_KEY } from "@/lib/constants";
-import OpenAI from "openai";
 import { SEPARATOR } from "@/lib/pool";
-import { getOpenAI } from "@/app/api/openai";
+import { getOpenAI, isInsufficientQuota } from "@/app/api/openai";
+import { getEdgeKeys, patchKeys } from "@/app/api/vercel";
+
+export const runtime = "edge";
 
 export async function GET() {
-  if (!process.env.EDGE_CONFIG || !process.env.API_TOKEN) {
-    return new NextResponse("not found EDGE_CONFIG or API_TOKEN");
-  }
-  const keys = await get(OPENAI_API_KEY);
-  if (!keys) {
-    return new NextResponse("not found api key");
-  }
-  const keyList = (keys as string).split(SEPARATOR);
-  const newList = [];
-  for (const key of keyList) {
-    try {
-      const res = await (
-        await getOpenAI(key)
-      ).chat.completions.create({
-        messages: [{ role: "user", content: "hello" }],
-        model: "gpt-3.5-turbo",
-        max_tokens: 1,
-      });
-      newList.push(key);
-    } catch (err: any) {
-      if (err instanceof OpenAI.APIError && err.code === "insufficient_quota") {
-        continue;
-      }
-      return new NextResponse(err);
-    }
-  }
-  if (newList.length != keyList.length) {
-    const err = await patchKeys(
-      newList.join(SEPARATOR),
-      process.env.EDGE_CONFIG!.match(/com\/([^?]+)/)![1],
-      process.env.API_TOKEN!,
-    );
-    if (err) {
-      return new NextResponse(err);
-    }
-  }
-
-  return NextResponse.json(newList);
-}
-
-async function patchKeys(
-  keys: string,
-  configId: string,
-  token: string,
-): Promise<any> {
   try {
-    const res = await fetch(
-      `https://api.vercel.com/v1/edge-config/${configId}/items`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: [
-            {
-              operation: "update",
-              key: OPENAI_API_KEY,
-              value: keys,
-            },
-          ],
-        }),
-      },
-    );
-    return (await res.json()).error?.message;
-  } catch (err) {
-    return err;
+    const keyList = await getEdgeKeys();
+    const promises = keyList.map(async (key) => {
+      try {
+        await (
+          await getOpenAI(key)
+        ).chat.completions.create({
+          messages: [{ role: "user", content: "hello" }],
+          model: "gpt-3.5-turbo",
+          max_tokens: 1,
+        });
+        return key;
+      } catch (err: any) {
+        if (!isInsufficientQuota(err)) {
+          throw err;
+        }
+      }
+    });
+
+    const newList = (await Promise.all(promises)).filter(Boolean);
+    if (newList.length != keyList.length) {
+      await patchKeys(newList.join(SEPARATOR));
+    }
+    return new NextResponse(`total: ${keyList.length}, now: ${newList.length}`);
+  } catch (err: any) {
+    return new NextResponse(err.cause ?? err);
   }
 }
