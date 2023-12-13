@@ -14,14 +14,18 @@ export enum Store {
 
 export const models = ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"];
 
-export const imageModels: SelectInfo[] = [
-  { value: "dall-e-3", show: "DALL·E 3" },
-];
-export const imageStyles: SelectInfo[] = [
-  { value: "vivid", show: "生动" },
-  { value: "natural", show: "自然" },
-];
-export const imageSizes = ["1024x1024", "1792x1024", "1024x1792"];
+export const ImageSelect = {
+  size: ["1024x1024", "1792x1024", "1024x1792"],
+  model: [{ value: "dall-e-3", show: "DALL·E 3" }],
+  style: [
+    { value: "vivid", show: "生动" },
+    { value: "natural", show: "自然 / 真实" },
+  ],
+  quality: [
+    { value: "standard", show: "标准" },
+    { value: "hd", show: "高清" },
+  ],
+};
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;

@@ -1,5 +1,4 @@
 import React from "react";
-import { clsx } from "clsx";
 import { Loader } from "lucide-react";
 
 function Result({
@@ -10,13 +9,14 @@ function Result({
   img: string | undefined;
 }) {
   return (
-    <div className="w-full">
-      <img
-        src={img ?? "/nothing.svg"}
-        draggable={false}
-        alt="generate image"
-        className={clsx("w-full", !img && "mx-auto w-9/12")}
-      />
+    <div className="w-full sm:aspect-square">
+      {img ? (
+        <Img url={img} />
+      ) : (
+        <div className="mx-auto w-10/12 sm:pt-6">
+          <Img url="/nothing.svg" />
+        </div>
+      )}
       {isLoading && (
         <div className="flex items-center justify-center gap-2 pb-2">
           <Loader size={22} className="animate-spin" strokeWidth={1.5} />
@@ -28,3 +28,14 @@ function Result({
 }
 
 export default Result;
+
+function Img({ url }: { url: string }) {
+  return (
+    <img
+      src={url}
+      alt="An error occurred"
+      draggable={false}
+      className="w-full"
+    />
+  );
+}

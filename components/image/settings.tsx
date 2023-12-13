@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { imageModels, imageSizes, imageStyles } from "@/lib/constants";
 import { useImageConfig } from "@/lib/store/image/config";
 import SelectWarp from "@/components/select-warp";
 import { Button } from "@/components/ui/button";
 import Textarea from "@/components/textarea";
 import { RefreshCcw } from "lucide-react";
+import { ImageSelect } from "@/lib/constants";
 
 function Settings({
   isLoading,
@@ -17,6 +17,9 @@ function Settings({
   const [model, setModel] = useState(useImageConfig((state) => state.model));
   const [style, setStyle] = useState(useImageConfig((state) => state.style));
   const [size, setSize] = useState(useImageConfig((state) => state.size));
+  const [quality, setQuality] = useState(
+    useImageConfig((state) => state.quality),
+  );
 
   const [text, setText] = useState<string>();
 
@@ -35,6 +38,11 @@ function Settings({
     UpdateConfig((cfg) => (cfg.size = select));
   }
 
+  function onQualityChange(select: string) {
+    setQuality(select);
+    UpdateConfig((cfg) => (cfg.quality = select));
+  }
+
   async function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key !== "Enter" || e.nativeEvent.isComposing || e.shiftKey) {
       return;
@@ -51,11 +59,11 @@ function Settings({
   }
 
   return (
-    <div className="flex w-full flex-col gap-4 p-6 sm:px-16 sm:py-10">
+    <div className="flex w-full flex-col gap-4 px-6 py-4 sm:justify-center sm:gap-5 sm:p-14">
       <SelectWarp
         label="模型"
         select={model}
-        infoList={imageModels}
+        infoList={ImageSelect.model}
         onValueChange={onModelChange}
         widthClass="w-[130px]"
         disabled={isLoading}
@@ -63,7 +71,7 @@ function Settings({
       <SelectWarp
         label="风格"
         select={style}
-        infoList={imageStyles}
+        infoList={ImageSelect.style}
         onValueChange={onStyleChange}
         widthClass="w-[130px]"
         disabled={isLoading}
@@ -71,8 +79,16 @@ function Settings({
       <SelectWarp
         label="尺寸"
         select={size}
-        infoList={imageSizes}
+        infoList={ImageSelect.size}
         onValueChange={onSizeChange}
+        widthClass="w-[130px]"
+        disabled={isLoading}
+      />
+      <SelectWarp
+        label="质量"
+        select={quality}
+        infoList={ImageSelect.quality}
+        onValueChange={onQualityChange}
         widthClass="w-[130px]"
         disabled={isLoading}
       />

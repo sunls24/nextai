@@ -5,11 +5,9 @@ import { NextResponse } from "next/server";
 import { ApiConfig, Plugins } from "@/lib/store/config";
 import { functions, onFunctionCall } from "@/app/api/chat/functions";
 import { getLocaleTime } from "@/lib/utils";
-import { getOpenAI, init } from "../openai";
+import { getOpenAI } from "../openai";
 
 export const runtime = "edge";
-
-init(process.env.OPENAI_API_KEY ?? "");
 
 export async function POST(req: Request) {
   const { messages, config, contextIndex } = await req.json();
@@ -55,9 +53,8 @@ export async function POST(req: Request) {
   } catch (err) {
     if (err instanceof OpenAI.APIError) {
       return new NextResponse(err.message, { status: err.status });
-    } else {
-      return new NextResponse(String(err), { status: 500 });
     }
+    return new NextResponse(String(err), { status: 500 });
   }
 }
 

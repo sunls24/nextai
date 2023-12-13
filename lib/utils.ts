@@ -36,6 +36,14 @@ export async function fetchForm(url: string, data: Record<string, string>) {
   });
 }
 
+export async function fetchPost(url: string, data: Record<string, any>) {
+  return fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
 export function isString(str: any): str is string {
   return typeof str === "string";
 }

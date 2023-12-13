@@ -5,6 +5,7 @@ const defaultConfig = {
   model: "dall-e-3",
   style: "vivid",
   size: "1024x1024",
+  quality: "standard",
 };
 
 type Config = typeof defaultConfig & {
