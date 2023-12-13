@@ -8,23 +8,22 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Card } from "@/components/ui/card";
-import { Github, Info } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Info } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useConfig } from "@/lib/store/config";
-import { VERSION } from "@/lib/constants";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TooltipWrap from "@/components/tooltip-wrap";
 import SettingsModel from "@/components/settings-model";
 import SettingsTemperature from "@/components/settings-temperature";
 import SettingsGoogle from "@/components/settings-google";
 import { ModeToggle } from "@/components/mode-toggle";
+import Github from "@/components/github";
 
 function Settings({ trigger }: { trigger: React.ReactNode }) {
-  const updateConfig = useConfig((state) => state.Update);
+  const UpdateConfig = useConfig((state) => state.Update);
   const [apiKey, setApiKey] = useState(
     useConfig((state) => state.apiConfig.apiKey),
   );
@@ -34,12 +33,12 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
 
   function onApiKeyChange(value: string) {
     setApiKey(value);
-    updateConfig((c) => (c.apiConfig.apiKey = value));
+    UpdateConfig((c) => (c.apiConfig.apiKey = value));
   }
 
   function onAutoTitleToggle(enabled: boolean) {
     setAutoTitle(enabled);
-    updateConfig((c) => (c.autoGenerateTitle = enabled));
+    UpdateConfig((c) => (c.autoGenerateTitle = enabled));
   }
 
   const searchEnabled = useConfig(
@@ -54,12 +53,12 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
 
   function onGSApiKeyChange(value: string) {
     setSearchApiKey(value);
-    updateConfig((c) => (c.apiConfig.plugins.googleSearch.apiKey = value));
+    UpdateConfig((c) => (c.apiConfig.plugins.googleSearch.apiKey = value));
   }
 
   function onGSEngineIdChange(value: string) {
     setSearchEngineId(value);
-    updateConfig((c) => (c.apiConfig.plugins.googleSearch.engineId = value));
+    UpdateConfig((c) => (c.apiConfig.plugins.googleSearch.engineId = value));
   }
 
   const [browseWebsite, setBrowseWebsite] = useState(
@@ -68,12 +67,12 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
 
   function onBWToggle(enabled: boolean) {
     setBrowseWebsite({ ...browseWebsite, enabled });
-    updateConfig((c) => (c.apiConfig.plugins.browseWebsite.enabled = enabled));
+    UpdateConfig((c) => (c.apiConfig.plugins.browseWebsite.enabled = enabled));
   }
 
   function onBWMaxLengthChange(maxLength: number) {
     setBrowseWebsite({ ...browseWebsite, maxLength });
-    updateConfig(
+    UpdateConfig(
       (c) => (c.apiConfig.plugins.browseWebsite.maxLength = maxLength),
     );
   }
@@ -84,12 +83,12 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
 
   function onWIToggle(enabled: boolean) {
     setWeatherInfo({ ...weatherInfo, enabled });
-    updateConfig((c) => (c.apiConfig.plugins.weatherInfo.enabled = enabled));
+    UpdateConfig((c) => (c.apiConfig.plugins.weatherInfo.enabled = enabled));
   }
 
   function onWIAmapKeyChange(amapKey: string) {
     setWeatherInfo({ ...weatherInfo, amapKey });
-    updateConfig((c) => (c.apiConfig.plugins.weatherInfo.amapKey = amapKey));
+    UpdateConfig((c) => (c.apiConfig.plugins.weatherInfo.amapKey = amapKey));
   }
 
   const [imageGeneration, setImageGeneration] = useState(
@@ -98,7 +97,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
 
   function onIGToggle(enabled: boolean) {
     setImageGeneration({ ...imageGeneration, enabled });
-    updateConfig(
+    UpdateConfig(
       (c) => (c.apiConfig.plugins.imageGeneration.enabled = enabled),
     );
   }
@@ -223,16 +222,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
         </ScrollArea>
         <div className="flex justify-between">
           <ModeToggle />
-          <Button
-            variant="ghost"
-            className="px-2"
-            onClick={() => open("https://github.com/sunls24/chat-ai")}
-          >
-            <Github size={20} strokeWidth={1.5} />
-            <span className="ml-1 text-muted-foreground underline underline-offset-2">
-              v{VERSION}
-            </span>
-          </Button>
+          <Github />
         </div>
       </SheetContent>
     </Sheet>

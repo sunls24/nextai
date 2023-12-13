@@ -35,3 +35,7 @@ export async function fetchForm(url: string, data: Record<string, string>) {
     body: new URLSearchParams(data),
   });
 }
+
+export function isString(str: any): str is string {
+  return typeof str === "string";
+}

@@ -1,5 +1,7 @@
+import { SelectInfo } from "@/components/select-warp";
+
 export const StoreVersion = 2.1;
-export const VERSION = "2.1.3";
+export const VERSION = "2.1.4";
 
 export const OPENAI_API_KEY = "OPENAI_API_KEY";
 export const REVERSE_URL = process.env.REVERSE_URL;
@@ -7,9 +9,19 @@ export const REVERSE_URL = process.env.REVERSE_URL;
 export enum Store {
   Chat = "chat-next-store",
   Config = "chat-next-config",
+  ConfigImage = "chat-next-image",
 }
 
 export const models = ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"];
+
+export const imageModels: SelectInfo[] = [
+  { value: "dall-e-3", show: "DALL·E 3" },
+];
+export const imageStyles: SelectInfo[] = [
+  { value: "vivid", show: "生动" },
+  { value: "natural", show: "自然" },
+];
+export const imageSizes = ["1024x1024", "1792x1024", "1024x1792"];
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;

@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, KeyboardEventHandler } from "react";
-import clsx from "clsx";
 import TextareaAutosize from "react-textarea-autosize";
+import { cn } from "@/lib/utils";
 
 function Textarea({
   className,
@@ -9,6 +9,7 @@ function Textarea({
   onChange,
   onKeyDown,
   autoFocus,
+  disabled,
   minRows = 3,
   maxRows = 20,
   rows = minRows,
@@ -19,6 +20,7 @@ function Textarea({
   onChange?: ChangeEventHandler<HTMLTextAreaElement>;
   onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>;
   autoFocus?: boolean;
+  disabled?: boolean;
 
   rows?: number;
   minRows?: number;
@@ -33,12 +35,13 @@ function Textarea({
       rows={rows}
       minRows={minRows}
       maxRows={maxRows}
-      className={clsx("input block w-full resize-none", className)}
+      className={cn("input block w-full resize-none", className)}
       placeholder={placeholder}
       value={value}
       autoFocus={autoFocus}
       onChange={onChange}
       onKeyDown={onKeyDown}
+      disabled={disabled}
     />
   );
 }

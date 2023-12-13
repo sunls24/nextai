@@ -41,28 +41,41 @@ type Config = typeof defaultConfig & {
 
 export type ApiConfig = typeof defaultConfig.apiConfig;
 
-export const useConfig = create<Config>()(
-  persist(
-    (set, get) => ({
-      ...defaultConfig,
-
-      Update(fn: (c: Config) => void) {
-        const config = get();
-        fn(config);
-        set({ ...config });
-      },
-    }),
-    {
-      name: Store.Config,
-      version: StoreVersion,
-      migrate(persistedState) {
-        const state = persistedState as Config;
-        if (!state.apiConfig.plugins.imageGeneration) {
-          state.apiConfig.plugins.imageGeneration =
-            defaultConfig.apiConfig.plugins.imageGeneration;
-        }
-        return state;
-      },
-    },
-  ),
+export const useConfig = createConfig<Config>(
+  defaultConfig,
+  Store.Config,
+  StoreVersion,
+  (persistedState) => {
+    const state = persistedState as Config;
+    if (!state.apiConfig.plugins.imageGeneration) {
+      state.apiConfig.plugins.imageGeneration =
+        defaultConfig.apiConfig.plugins.imageGeneration;
+    }
+    return state;
+  },
 );
+
+export function createConfig<T>(
+  def: Omit<T, "Update">,
+  name: string,
+  version: number,
+  migrate?: (persistedState: unknown, version: number) => T | Promise<T>,
+) {
+  return create<T>()(
+    persist(
+      (set, get) => ({
+        ...(def as T),
+        Update(fn: (c: T) => void) {
+          const config = get();
+          fn(config);
+          set({ ...config });
+        },
+      }),
+      {
+        name,
+        version,
+        migrate,
+      },
+    ),
+  );
+}

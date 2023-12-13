@@ -7,7 +7,7 @@ import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function SettingsGoogle({ className }: { className?: string }) {
-  const updateConfig = useConfig((state) => state.Update);
+  const UpdateConfig = useConfig((state) => state.Update);
   const searchEnableCfg = useConfig(
     (state) => state.apiConfig.plugins.googleSearch.enabled,
   );
@@ -19,7 +19,7 @@ function SettingsGoogle({ className }: { className?: string }) {
 
   function onGSToggle(enabled: boolean) {
     setSearchEnable(enabled);
-    updateConfig((c) => (c.apiConfig.plugins.googleSearch.enabled = enabled));
+    UpdateConfig((c) => (c.apiConfig.plugins.googleSearch.enabled = enabled));
   }
 
   return (

@@ -9,7 +9,7 @@ import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function SettingsTemperature({ className }: { className?: string }) {
-  const updateConfig = useConfig((state) => state.Update);
+  const UpdateConfig = useConfig((state) => state.Update);
   const temperatureCfg = useConfig((state) => state.apiConfig.temperature);
   const [temperature, setTemperature] = useState(temperatureCfg);
 
@@ -19,7 +19,7 @@ function SettingsTemperature({ className }: { className?: string }) {
 
   function onTemperatureChange(value: number) {
     setTemperature(value);
-    updateConfig((c) => (c.apiConfig.temperature = value));
+    UpdateConfig((c) => (c.apiConfig.temperature = value));
   }
 
   return (

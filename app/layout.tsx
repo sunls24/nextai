@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Chat AI",
-  description: "Chat AI",
   appleWebApp: {
     title: "Chat AI",
   },
