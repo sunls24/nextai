@@ -107,7 +107,8 @@ function Settings({
         minRows={3}
         maxRows={3}
       />
-      <div className="flex flex-row-reverse">
+      <div className="flex items-center justify-between">
+        <span className="text-muted-foreground">图片将在一小时后过期</span>
         <Button className="w-32" onClick={onClick} disabled={isLoading}>
           {isLoading && (
             <RefreshCcw
