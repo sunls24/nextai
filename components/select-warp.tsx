@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { clsx } from "clsx";
 import { Label } from "@/components/ui/label";
 import Mounted from "@/components/mounted";
@@ -25,6 +25,7 @@ function SelectWarp({
   className,
   widthClass,
   disabled,
+  icon,
 }: {
   label: string;
   select: string;
@@ -33,10 +34,13 @@ function SelectWarp({
   className?: string;
   widthClass?: string;
   disabled?: boolean;
+  icon?: ReactElement;
 }) {
   return (
-    <div className={clsx("flex items-center justify-between", className)}>
+    <div className={clsx("flex items-center gap-1", className)}>
+      {icon}
       <Label className="shrink-0">{label}</Label>
+      <div className="flex-1" />
       <Mounted fallback={<Skeleton className={clsx("h-9", widthClass)} />}>
         <Select
           value={select}

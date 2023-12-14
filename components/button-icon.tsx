@@ -2,7 +2,7 @@
 import React, { ReactElement } from "react";
 import { GITHUB_URL, VERSION } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRightFromCircle, GithubIcon } from "lucide-react";
+import { ArrowUpRightFromCircle, GithubIcon, Image } from "lucide-react";
 
 function ButtonIcon({
   url,
@@ -54,7 +54,7 @@ export function ImageButton() {
     <ButtonIcon
       url="/image"
       text="文生图"
-      icon={<ArrowUpRightFromCircle size={18} />}
+      icon={<Image size={20} strokeWidth={1.8} />}
     />
   );
 }

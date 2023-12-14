@@ -3,7 +3,7 @@ import { useImageConfig } from "@/lib/store/image/config";
 import SelectWarp from "@/components/select-warp";
 import { Button } from "@/components/ui/button";
 import Textarea from "@/components/textarea";
-import { RefreshCcw } from "lucide-react";
+import { Box, ImagePlus, Palette, RefreshCcw, Ruler } from "lucide-react";
 import { ImageSelect } from "@/lib/constants";
 
 function Settings({
@@ -67,6 +67,7 @@ function Settings({
         onValueChange={onModelChange}
         widthClass="w-[130px]"
         disabled={isLoading}
+        icon={<Box size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="风格"
@@ -75,6 +76,7 @@ function Settings({
         onValueChange={onStyleChange}
         widthClass="w-[130px]"
         disabled={isLoading}
+        icon={<Palette size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="尺寸"
@@ -83,6 +85,7 @@ function Settings({
         onValueChange={onSizeChange}
         widthClass="w-[130px]"
         disabled={isLoading}
+        icon={<Ruler size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="质量"
@@ -91,6 +94,7 @@ function Settings({
         onValueChange={onQualityChange}
         widthClass="w-[130px]"
         disabled={isLoading}
+        icon={<ImagePlus size={20} strokeWidth={1.8} />}
       />
       <Textarea
         placeholder="生成图像的文字描述，例如：生成一只可爱的小猫 🐱"
