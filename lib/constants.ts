@@ -1,5 +1,3 @@
-import { SelectInfo } from "@/components/select-warp";
-
 export const StoreVersion = 2.1;
 export const VERSION = "2.1.4";
 
@@ -26,6 +24,8 @@ export const ImageSelect = {
     { value: "hd", show: "高清" },
   ],
 };
+
+export const GITHUB_URL = "https://github.com/sunls24/chat-ai";
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;

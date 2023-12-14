@@ -20,7 +20,7 @@ import SettingsModel from "@/components/settings-model";
 import SettingsTemperature from "@/components/settings-temperature";
 import SettingsGoogle from "@/components/settings-google";
 import { ModeToggle } from "@/components/mode-toggle";
-import Github from "@/components/github";
+import { GithubButton } from "@/components/button-icon";
 
 function Settings({ trigger }: { trigger: React.ReactNode }) {
   const UpdateConfig = useConfig((state) => state.Update);
@@ -222,7 +222,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
         </ScrollArea>
         <div className="flex justify-between">
           <ModeToggle />
-          <Github />
+          <GithubButton />
         </div>
       </SheetContent>
     </Sheet>
