@@ -17,31 +17,29 @@ export class ApiKeyPool {
     return key;
   }
 
-  public async getNextEdge(custom?: string): Promise<string> {
-    if (custom) {
-      return custom;
-    }
-    await this.updateEdge();
-    return this.getNext();
-  }
-
-  public update(keys: string): ApiKeyPool {
+  public update(keys: string, onUpdate?: () => void): ApiKeyPool {
     if (keys === this.keys) {
       return this;
     }
     this.keys = keys;
     this.keyList = keys.split(SEPARATOR);
-    this.currentIndex = Math.min(this.currentIndex, this.keyList.length - 1);
+    this.currentIndex = 0;
+    onUpdate?.();
     return this;
   }
 
-  private async updateEdge() {
+  public async getNextEdge(onUpdate?: () => void): Promise<string> {
+    await this.updateEdge(onUpdate);
+    return this.getNext();
+  }
+
+  private async updateEdge(onUpdate?: () => void) {
     if (!process.env.EDGE_CONFIG) {
       return;
     }
-    const keysEdge = await get(OPENAI_API_KEY);
-    if (keysEdge) {
-      this.update(keysEdge as string);
+    const keys = await get(OPENAI_API_KEY);
+    if (keys) {
+      this.update(keys as string, onUpdate);
     }
   }
 }

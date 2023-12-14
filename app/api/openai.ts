@@ -2,9 +2,15 @@ import OpenAI from "openai";
 import { ApiKeyPool } from "@/lib/pool";
 
 const apiKeyPool = new ApiKeyPool().update(process.env.OPENAI_API_KEY ?? "");
+const clientPool: Map<string, OpenAI> = new Map();
 
 export async function getOpenAI(key?: string): Promise<OpenAI> {
-  return new OpenAI({ apiKey: await apiKeyPool.getNextEdge(key) });
+  const apiKey =
+    key || (await apiKeyPool.getNextEdge(() => clientPool.clear()));
+  if (!clientPool.has(apiKey)) {
+    clientPool.set(apiKey, new OpenAI({ apiKey: apiKey }));
+  }
+  return clientPool.get(apiKey)!;
 }
 
 export function isInsufficientQuota(err: Error) {
