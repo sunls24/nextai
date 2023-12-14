@@ -5,9 +5,12 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Chat AI",
+  title: {
+    default: "NEXT AI",
+    template: "%s - NEXT AI",
+  },
   appleWebApp: {
-    title: "Chat AI",
+    title: "NEXT AI",
   },
 };
 

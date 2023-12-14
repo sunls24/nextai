@@ -22,7 +22,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: sunls24/chat-ai
+          images: sunls24/nextai
           tags: |
             type=raw,value=latest
             type=ref,event=tag

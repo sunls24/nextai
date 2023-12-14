@@ -25,7 +25,7 @@ export const ImageSelect = {
   ],
 };
 
-export const GITHUB_URL = "https://github.com/sunls24/chat-ai";
+export const GITHUB_URL = "https://github.com/sunls24/nextai";
 
 export const TOPIC_MAX_LENGTH = 12;
 export const AUTO_TOPIC_LENGTH = 4;
