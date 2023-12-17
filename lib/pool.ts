@@ -1,6 +1,3 @@
-import { get } from "@vercel/edge-config";
-import { OPENAI_API_KEY } from "@/lib/constants";
-
 export const SEPARATOR = ",";
 
 export class ApiKeyPool {
@@ -26,20 +23,5 @@ export class ApiKeyPool {
     this.currentIndex = 0;
     onUpdate?.();
     return this;
-  }
-
-  public async getNextEdge(onUpdate?: () => void): Promise<string> {
-    await this.updateEdge(onUpdate);
-    return this.getNext();
-  }
-
-  private async updateEdge(onUpdate?: () => void) {
-    if (!process.env.EDGE_CONFIG) {
-      return;
-    }
-    const keys = await get(OPENAI_API_KEY);
-    if (keys) {
-      this.update(keys as string, onUpdate);
-    }
   }
 }

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { SEPARATOR } from "@/lib/pool";
-import { getEdgeKeys, patchKeys } from "@/app/api/vercel";
 import { accessTokenInfo } from "@/app/api/openai";
 import { fetchForm } from "@/lib/utils";
 import { REVERSE_URL } from "@/lib/constants";
+import { getOpenAIKeys, updateOpenAIKeys } from "@/lib/alist";
 
 export const runtime = "edge";
 
@@ -19,7 +19,8 @@ export async function GET(req: Request) {
     return new NextResponse("not found OPENAI_PASSWORD");
   }
   try {
-    const keyList = await getEdgeKeys();
+    const errorList: string[] = [];
+    const keyList = (await getOpenAIKeys()).split(SEPARATOR);
     const promises = keyList.map(async (key, index) => {
       if (key.startsWith("sk-")) {
         return key;
@@ -34,13 +35,16 @@ export async function GET(req: Request) {
       });
       const result = await res.json();
       if (result.detail) {
-        throw new Error(result.detail);
+        errorList.push(`${index}: ${result.detail}`);
+        return key;
       }
       return result["access_token"] ?? key;
     });
 
-    await patchKeys((await Promise.all(promises)).join(SEPARATOR));
-    return new NextResponse("done.");
+    await updateOpenAIKeys((await Promise.all(promises)).join(SEPARATOR));
+    return errorList.length
+      ? new NextResponse(errorList.join("\n"))
+      : new NextResponse("done.");
   } catch (err: any) {
     return new NextResponse(err.cause ?? err);
   }

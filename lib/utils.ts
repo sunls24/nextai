@@ -36,10 +36,14 @@ export async function fetchForm(url: string, data: Record<string, string>) {
   });
 }
 
-export async function fetchPost(url: string, data: Record<string, any>) {
+export async function fetchPost(
+  url: string,
+  data: Record<string, any>,
+  headers?: Record<string, string>,
+) {
   return fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify(data),
   });
 }

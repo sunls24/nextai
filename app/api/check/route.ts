@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
+import { getOpenAI, isUnavailable, updateOpenAI } from "@/app/api/openai";
+import { getOpenAIKeys, updateOpenAIKeys } from "@/lib/alist";
 import { SEPARATOR } from "@/lib/pool";
-import { getOpenAI, isInsufficientQuota } from "@/app/api/openai";
-import { getEdgeKeys, patchKeys } from "@/app/api/vercel";
 
 export const runtime = "edge";
 
 export async function GET() {
   try {
-    const keyList = await getEdgeKeys();
+    const keyList = (await getOpenAIKeys()).split(SEPARATOR);
     const promises = keyList.map(async (key) => {
       try {
         await (
@@ -19,7 +19,7 @@ export async function GET() {
         });
         return key;
       } catch (err: any) {
-        if (!isInsufficientQuota(err)) {
+        if (!isUnavailable(err)) {
           throw err;
         }
       }
@@ -27,8 +27,9 @@ export async function GET() {
 
     const newList = (await Promise.all(promises)).filter(Boolean);
     if (newList.length != keyList.length) {
-      await patchKeys(newList.join(SEPARATOR));
+      await updateOpenAIKeys(newList.join(SEPARATOR));
     }
+    await updateOpenAI();
     return new NextResponse(`total: ${keyList.length}, now: ${newList.length}`);
   } catch (err: any) {
     return new NextResponse(err.cause ?? err);
