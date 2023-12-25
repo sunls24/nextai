@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     model: apiConfig.model,
     temperature: apiConfig.temperature,
     stream: true,
-    functions: functions.filter((v) => plugins[v.name].enabled),
+    functions: functions.filter((v) => plugins[v.name]?.enabled),
     messages,
   };
   body.functions!.length || delete body.functions;

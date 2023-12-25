@@ -70,6 +70,11 @@ function Chat() {
           config: {
             ...config,
             apiKey: apiKeyPool.update(config.apiKey).getNext(),
+            plugins: Object.fromEntries(
+              Object.entries(config.plugins).filter(
+                ([, value]) => value.enabled,
+              ),
+            ),
           },
           contextIndex,
         },
