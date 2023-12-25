@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import Settings from "@/components/image/settings";
 import Result from "@/components/image/result";
-import { useImageConfig } from "@/lib/store/image/config";
+import { useImageConfig } from "@/lib/store/config-image";
 import { fetchPost } from "@/lib/utils";
-import { useConfig } from "@/lib/store/config";
+import { useConfig } from "@/lib/store/config-chat";
 import { ApiKeyPool } from "@/lib/pool";
 import toast from "react-hot-toast";
 
@@ -12,7 +12,7 @@ const apiKeyPool = new ApiKeyPool();
 
 function Body() {
   const config = useImageConfig();
-  const apiKey = useConfig((state) => state.apiConfig.apiKey);
+  const apiKey = useConfig((state) => state.apiConfig().apiKey);
   const [isLoading, setIsLoading] = useState(false);
   const [img, setImg] = useState<string>();
 

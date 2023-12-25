@@ -1,16 +1,23 @@
-export const StoreVersion = 2.1;
-export const VERSION = "2.1.4";
+export const StoreVersion = 2.2;
+export const VERSION = "2.2.0";
 
-export const OPENAI_API_KEY = "OPENAI_API_KEY";
 export const REVERSE_URL = process.env.REVERSE_URL;
 
 export enum Store {
-  Chat = "chat-next-store",
-  Config = "chat-next-config",
-  ConfigImage = "chat-next-image",
+  Chat = "nextai-chat",
+  ConfigChat = "nextai-config-chat",
+  ConfigImage = "nextai-config-image",
 }
 
-export const models = ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"];
+export const providerSelect = [
+  { value: "openai", show: "OpenAI" },
+  { value: "google", show: "Google" },
+];
+
+export const providerModel: { [key: string]: string[] } = {
+  openai: ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"],
+  google: ["gemini-pro"],
+};
 
 export const ImageSelect = {
   size: ["1024x1024", "1792x1024", "1024x1792"],

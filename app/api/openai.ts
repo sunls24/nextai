@@ -25,7 +25,7 @@ export async function updateOpenAI() {
   }
 }
 
-export async function getNextKey() {
+export async function getNextOpenAI() {
   await initOpenAI();
   return apiKeyPool.getNext();
 }

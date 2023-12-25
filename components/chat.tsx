@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useChatID, useChatStore } from "@/lib/store/chat";
 import { PROMPT_TOPIC } from "@/lib/constants";
 import { trimTopic } from "@/lib/utils";
-import { useConfig } from "@/lib/store/config";
+import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
 import { ApiKeyPool } from "@/lib/pool";
@@ -50,7 +50,8 @@ function Chat() {
     },
   });
 
-  const config = useConfig((state) => state.apiConfig);
+  const config = useConfig((state) => state.apiConfig());
+  const provider = useConfig((state) => state.provider);
   const autoTitle = useConfig((state) => state.autoGenerateTitle);
 
   useEffect(() => {
@@ -67,16 +68,19 @@ function Chat() {
     () => ({
       options: {
         body: {
+          provider,
+          contextIndex,
           config: {
             ...config,
             apiKey: apiKeyPool.update(config.apiKey).getNext(),
-            plugins: Object.fromEntries(
-              Object.entries(config.plugins).filter(
-                ([, value]) => value.enabled,
+            plugins:
+              config.plugins &&
+              Object.fromEntries(
+                Object.entries(config.plugins).filter(
+                  ([, value]) => value.enabled,
+                ),
               ),
-            ),
           },
-          contextIndex,
         },
       },
     }),

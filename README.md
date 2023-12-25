@@ -13,7 +13,7 @@
 #### 环境变量
 
 - `OPENAI_API_KEY`：支持设置多个使用`,`分割，轮询策略
-- `GOOGLE_API_KEY`：用于 Google 搜索插件（可选）
+- `GOOGLE_API_KEY`：用于 Google 搜索插件和 Gemini 模型（可选）
 - `GOOGLE_ENGINE_ID`：用于 Google 搜索插件（可选）
 - `AMAP_KEY`：高德开放平台 Key（可选）
 

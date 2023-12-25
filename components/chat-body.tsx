@@ -6,7 +6,7 @@ import Dividers from "@/components/dividers";
 import { emitter, mittKey } from "@/lib/mitt";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "lucide-react";
-import SettingsQuick from "@/components/settings-quick";
+import SettingsQuick from "@/components/settings/settings-quick";
 
 function ChatBody({
   isLoading,

@@ -1,12 +1,14 @@
 import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import { getOpenAI } from "@/app/api/openai";
+import { SEPARATOR } from "@/lib/pool";
 
 interface FunctionCall {
   function: ChatCompletionCreateParams.Function;
   call: (name: string, args: Record<string, unknown>) => Promise<any>;
 }
 
+const searchApiKey = process.env.GOOGLE_API_KEY?.split(SEPARATOR)[0];
 const functionMap: Record<string, FunctionCall> = {
   googleSearch: {
     function: {
@@ -26,8 +28,8 @@ const functionMap: Record<string, FunctionCall> = {
     call: async (name, args) => {
       const nothing = "nothing";
       const cfg = args.config as any;
-      const apiKey = process.env.GOOGLE_API_KEY ?? cfg.apiKey;
-      const engineId = process.env.GOOGLE_ENGINE_ID ?? cfg.engineId;
+      const apiKey = cfg.apiKey || searchApiKey;
+      const engineId = cfg.engineId || process.env.GOOGLE_ENGINE_ID;
       if (!apiKey || !engineId) {
         console.log(`- ${name} apiKey or engineId is empty`);
         return nothing;
@@ -39,7 +41,7 @@ const functionMap: Record<string, FunctionCall> = {
         const result = await res.json();
         return result.items ?? nothing;
       } catch (err: any) {
-        console.log(`- ${err.cause ?? err} [${name} ${args.keyword}]`);
+        console.log(`- ${name} ${err.cause ?? err}`);
         return nothing;
       }
     },
@@ -73,7 +75,7 @@ const functionMap: Record<string, FunctionCall> = {
         }
         return result;
       } catch (err: any) {
-        console.log(`- ${err.cause ?? err} [${name} ${url}]`);
+        console.log(`- ${name} ${err.cause ?? err}`);
         return "Unable to access this website";
       }
     },
@@ -101,7 +103,7 @@ const functionMap: Record<string, FunctionCall> = {
     call: async (name, args) => {
       const nothing = "Unable to get weather information";
       const cfg = args.config as any;
-      const key = cfg.amapKey ? cfg.amapKey : process.env.AMAP_KEY;
+      const key = cfg.amapKey || process.env.AMAP_KEY;
       if (!key) {
         console.log(`- ${name} amapKey is empty`);
         return nothing;
@@ -125,7 +127,7 @@ const functionMap: Record<string, FunctionCall> = {
         }
         return result;
       } catch (err: any) {
-        console.log(`- ${err.cause ?? err} [${name} ${args.location}]`);
+        console.log(`- ${name} ${err.cause ?? err}`);
         return nothing;
       }
     },
@@ -169,7 +171,7 @@ const functionMap: Record<string, FunctionCall> = {
             "Display this image using full url and md format and remind user that image will expire after an hour",
         };
       } catch (err: any) {
-        console.log(`- ${err.cause ?? err} [${name} ${prompt}]`);
+        console.log(`- ${name} ${err.cause ?? err}`);
         return "Generate failure";
       }
     },

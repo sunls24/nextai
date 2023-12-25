@@ -8,11 +8,7 @@ const defaultConfig = {
   quality: "standard",
 };
 
-type Config = typeof defaultConfig & {
-  Update(fn: (c: Config) => void): void;
-};
-
-export const useImageConfig = createConfig<Config>(
+export const useImageConfig = createConfig(
   defaultConfig,
   Store.ConfigImage,
   StoreVersion,

@@ -27,7 +27,7 @@ function SelectWarp({
   disabled,
   icon,
 }: {
-  label: string;
+  label?: string;
   select: string;
   infoList: string[] | SelectInfo[];
   onValueChange: (v: string) => void;
@@ -39,7 +39,7 @@ function SelectWarp({
   return (
     <div className={clsx("flex items-center gap-1", className)}>
       {icon}
-      <Label className="shrink-0">{label}</Label>
+      {label && <Label className="shrink-0">{label}</Label>}
       <div className="flex-1" />
       <Mounted fallback={<Skeleton className={clsx("h-9", widthClass)} />}>
         <Select

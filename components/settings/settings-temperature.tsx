@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useConfig } from "@/lib/store/config";
+import React from "react";
+import { useConfig } from "@/lib/store/config-chat";
 import { Label } from "@/components/ui/label";
 import TooltipWrap from "@/components/tooltip-wrap";
 import { Info } from "lucide-react";
@@ -9,18 +9,8 @@ import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function SettingsTemperature({ className }: { className?: string }) {
-  const UpdateConfig = useConfig((state) => state.Update);
-  const temperatureCfg = useConfig((state) => state.apiConfig.temperature);
-  const [temperature, setTemperature] = useState(temperatureCfg);
-
-  useEffect(() => {
-    temperature !== temperatureCfg && setTemperature(temperatureCfg);
-  }, [temperatureCfg]);
-
-  function onTemperatureChange(value: number) {
-    setTemperature(value);
-    UpdateConfig((c) => (c.apiConfig.temperature = value));
-  }
+  const temperature = useConfig((state) => state.apiConfig().temperature);
+  const updateConfig = useConfig((state) => state.update);
 
   return (
     <div className={clsx("flex h-9 items-center gap-2", className)}>
@@ -37,7 +27,9 @@ function SettingsTemperature({ className }: { className?: string }) {
           step={0.1}
           className="w-[50%]"
           value={[temperature]}
-          onValueChange={(v) => onTemperatureChange(v[0])}
+          onValueChange={(v) =>
+            updateConfig((c) => (c.apiConfig().temperature = v[0]))
+          }
         />
       </Mounted>
     </div>

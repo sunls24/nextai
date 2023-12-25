@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useImageConfig } from "@/lib/store/image/config";
+import { useImageConfig } from "@/lib/store/config-image";
 import SelectWarp from "@/components/select-warp";
 import { Button } from "@/components/ui/button";
 import Textarea from "@/components/textarea";
@@ -13,7 +13,7 @@ function Settings({
   isLoading: boolean;
   onGenerate: (text: string) => Promise<void>;
 }) {
-  const UpdateConfig = useImageConfig((state) => state.Update);
+  const UpdateConfig = useImageConfig((state) => state.update);
   const [model, setModel] = useState(useImageConfig((state) => state.model));
   const [style, setStyle] = useState(useImageConfig((state) => state.style));
   const [size, setSize] = useState(useImageConfig((state) => state.size));
