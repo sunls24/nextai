@@ -32,6 +32,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json"></link>
+      </head>
       <body>
         <ThemeProvider
           attribute="class"
