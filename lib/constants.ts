@@ -15,7 +15,7 @@ export const providerSelect = [
 ];
 
 export const providerModel: { [key: string]: string[] } = {
-  openai: ["gpt-3.5-turbo", "gpt-3.5-turbo-1106"],
+  openai: ["gpt-3.5-turbo", "gpt-3.5-turbo-1106", "gpt-4"],
   google: ["gemini-pro"],
 };
 

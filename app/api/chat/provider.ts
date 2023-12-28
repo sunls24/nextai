@@ -32,7 +32,7 @@ async function openaiHandler(messages: any, config: ApiConfig) {
   };
   body.functions!.length || delete body.functions;
   const response = await (
-    await getOpenAI(config.apiKey)
+    await getOpenAI(config.apiKey, config.model)
   ).chat.completions.create(body);
   const stream = OpenAIStream(response, {
     experimental_onFunctionCall: async (

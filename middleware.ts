@@ -34,9 +34,8 @@ export async function middleware(req: NextRequest) {
   }
 }
 
-const X_API_KEY = process.env.X_API_KEY ?? "";
-
-const xAuth = authHeader(X_API_KEY);
+export const X_API_KEY = process.env.X_API_KEY ?? "";
+const X_AUTH = authHeader(X_API_KEY);
 
 function authHeader(key: string) {
   return `Bearer ${key}`;
@@ -50,7 +49,7 @@ async function x(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         Authorization:
-          auth === xAuth ? authHeader(await getNextOpenAI()) : auth,
+          auth === X_AUTH ? authHeader(await getNextOpenAI()) : auth,
       },
       method: req.method,
       body: req.body,

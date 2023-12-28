@@ -2,17 +2,23 @@ import OpenAI from "openai";
 import { ApiKeyPool } from "@/lib/pool";
 import { execOnce } from "next/dist/shared/lib/utils";
 import { getOpenAIKeys } from "@/lib/alist";
+import { X_API_KEY } from "@/middleware";
 
 const apiKeyPool = new ApiKeyPool().update(process.env.OPENAI_API_KEY ?? "");
 const clientPool: Map<string, OpenAI> = new Map();
 
 const initOpenAI = execOnce(updateOpenAI);
 
-export async function getOpenAI(key?: string): Promise<OpenAI> {
+export async function getOpenAI(key?: string, model?: string): Promise<OpenAI> {
   await initOpenAI();
+  let baseURL = undefined;
+  if (key === X_API_KEY && model) {
+    key = model.startsWith("gpt-4") ? process.env.GITHUB_TOKEN : undefined;
+    baseURL = key && process.env.COPILOT_PROXY;
+  }
   const apiKey = key || apiKeyPool.getNext();
   if (!clientPool.has(apiKey)) {
-    clientPool.set(apiKey, new OpenAI({ apiKey: apiKey }));
+    clientPool.set(apiKey, new OpenAI({ apiKey, baseURL }));
   }
   return clientPool.get(apiKey)!;
 }
