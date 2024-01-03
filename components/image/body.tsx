@@ -22,7 +22,7 @@ function Body() {
     try {
       const res = await fetchPost("/api/image", {
         apiKey: apiKeyPool.update(apiKey).getNext(),
-        config: config,
+        config,
         prompt: text,
       });
       const url = await res.text();

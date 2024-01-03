@@ -21,7 +21,10 @@ export const providerModel: { [key: string]: string[] } = {
 
 export const ImageSelect = {
   size: ["1024x1024", "1792x1024", "1024x1792"],
-  model: [{ value: "dall-e-3", show: "DALL·E 3" }],
+  model: [
+    { value: "dall-e-3", show: "DALL·E 3" },
+    { value: "stable-diffusion", show: "Stable Diffusion" },
+  ],
   style: [
     { value: "vivid", show: "生动" },
     { value: "natural", show: "自然 / 真实" },

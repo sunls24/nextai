@@ -1,7 +1,7 @@
 import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import { getOpenAI } from "@/app/api/openai";
 import { SEPARATOR } from "@/lib/pool";
+import { sd2dall } from "@/app/api/openai";
 
 interface FunctionCall {
   function: ChatCompletionCreateParams.Function;
@@ -135,31 +135,24 @@ const functionMap: Record<string, FunctionCall> = {
   imageGeneration: {
     function: {
       name: "imageGeneration",
-      description: "Generate image by prompt",
+      description: "Generate image by detailed English prompt",
       parameters: {
         type: "object",
         properties: {
-          prompt: {
-            type: "string",
-          },
-          style: {
+          enPromptDetail: {
             type: "string",
             description:
-              "The style of the generated images, must be one of 'vivid' or 'natural'",
+              "For a better image, provide more details and consider composition elements such as theme, background, color scheme, lighting, and positioning.",
           },
         },
-        required: ["prompt"],
+        required: ["enPromptDetail"],
       },
     },
     call: async (name, args) => {
-      const prompt = args.prompt as string;
+      const prompt = args.enPromptDetail as string;
       try {
-        const response = await (
-          await getOpenAI(args.apiKey as string)
-        ).images.generate({
+        const response = await sd2dall.images.generate({
           prompt: prompt,
-          // @ts-ignore
-          style: args.style,
           // response_format: "b64_json",
           model: "dall-e-3",
           size: "1024x1024",
@@ -167,8 +160,7 @@ const functionMap: Record<string, FunctionCall> = {
         });
         return {
           result: { url: response.data[0].url },
-          system:
-            "Display this image using full url and md format and remind user that image will expire after an hour",
+          system: "Display this image using full url and md format",
         };
       } catch (err: any) {
         console.log(`- ${name} ${err.cause ?? err}`);

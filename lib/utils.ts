@@ -51,3 +51,7 @@ export async function fetchPost(
 export function isString(str: any): str is string {
   return typeof str === "string";
 }
+
+export function isDall(model: string) {
+  return model === "dall-e-3";
+}

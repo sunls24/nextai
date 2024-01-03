@@ -40,7 +40,6 @@ async function openaiHandler(messages: any, config: ApiConfig) {
       createFunctionCallMessages,
     ) => {
       args.config = config.plugins![name];
-      args.apiKey = config.apiKey;
       const result = await onFunctionCall(name, args);
       const newMessages = createFunctionCallMessages(result.result ?? result);
       if (result.system) {

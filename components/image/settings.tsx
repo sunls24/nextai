@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import Textarea from "@/components/textarea";
 import { Box, ImagePlus, Palette, RefreshCcw, Ruler } from "lucide-react";
 import { ImageSelect } from "@/lib/constants";
+import { isDall } from "@/lib/utils";
+import Mounted from "@/components/mounted";
+import SettingsSwitch from "@/components/settings/settings-switch";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Settings({
   isLoading,
@@ -13,35 +17,10 @@ function Settings({
   isLoading: boolean;
   onGenerate: (text: string) => Promise<void>;
 }) {
-  const UpdateConfig = useImageConfig((state) => state.update);
-  const [model, setModel] = useState(useImageConfig((state) => state.model));
-  const [style, setStyle] = useState(useImageConfig((state) => state.style));
-  const [size, setSize] = useState(useImageConfig((state) => state.size));
-  const [quality, setQuality] = useState(
-    useImageConfig((state) => state.quality),
-  );
+  const config = useImageConfig();
+  const updateConfig = useImageConfig((state) => state.update);
 
   const [text, setText] = useState<string>();
-
-  function onModelChange(select: string) {
-    setModel(select);
-    UpdateConfig((cfg) => (cfg.model = select));
-  }
-
-  function onStyleChange(select: string) {
-    setStyle(select);
-    UpdateConfig((cfg) => (cfg.style = select));
-  }
-
-  function onSizeChange(select: string) {
-    setSize(select);
-    UpdateConfig((cfg) => (cfg.size = select));
-  }
-
-  function onQualityChange(select: string) {
-    setQuality(select);
-    UpdateConfig((cfg) => (cfg.quality = select));
-  }
 
   async function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key !== "Enter" || e.nativeEvent.isComposing || e.shiftKey) {
@@ -62,42 +41,42 @@ function Settings({
     <div className="flex w-full flex-col gap-4 px-6 py-4 sm:justify-center sm:gap-5 sm:p-14">
       <SelectWarp
         label="模型"
-        select={model}
+        select={config.model}
         infoList={ImageSelect.model}
-        onValueChange={onModelChange}
-        widthClass="w-[130px]"
+        onValueChange={(v) => updateConfig((cfg) => (cfg.model = v))}
+        widthClass="w-[150px]"
         disabled={isLoading}
         icon={<Box size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="风格"
-        select={style}
+        select={config.style}
         infoList={ImageSelect.style}
-        onValueChange={onStyleChange}
+        onValueChange={(v) => updateConfig((cfg) => (cfg.style = v))}
         widthClass="w-[130px]"
-        disabled={isLoading}
+        disabled={isLoading || !isDall(config.model)}
         icon={<Palette size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="尺寸"
-        select={size}
+        select={config.size}
         infoList={ImageSelect.size}
-        onValueChange={onSizeChange}
+        onValueChange={(v) => updateConfig((cfg) => (cfg.size = v))}
         widthClass="w-[130px]"
-        disabled={isLoading}
+        disabled={isLoading || !isDall(config.model)}
         icon={<Ruler size={20} strokeWidth={1.8} />}
       />
       <SelectWarp
         label="质量"
-        select={quality}
+        select={config.quality}
         infoList={ImageSelect.quality}
-        onValueChange={onQualityChange}
+        onValueChange={(v) => updateConfig((cfg) => (cfg.quality = v))}
         widthClass="w-[130px]"
-        disabled={isLoading}
+        disabled={isLoading || !isDall(config.model)}
         icon={<ImagePlus size={20} strokeWidth={1.8} />}
       />
       <Textarea
-        placeholder="生成图像的文字描述，例如：生成一只可爱的小猫 🐱"
+        placeholder="生成图像的文字描述，例如：一只可爱的小猫 🐱"
         value={text}
         autoFocus={true}
         disabled={isLoading}
@@ -108,7 +87,18 @@ function Settings({
         maxRows={3}
       />
       <div className="flex items-center justify-between">
-        <span className="text-muted-foreground">图片将在一小时后过期</span>
+        <Mounted fallback={<Skeleton className="h-8 w-32" />}>
+          {isDall(config.model) ? (
+            <span className="text-muted-foreground">图片将在一小时后过期</span>
+          ) : (
+            <SettingsSwitch
+              label="自动优化提示"
+              disabled={isLoading}
+              checked={config.autoPrompt ?? true}
+              onChange={(v) => updateConfig((cfg) => (cfg.autoPrompt = v))}
+            />
+          )}
+        </Mounted>
         <Button className="w-32" onClick={onClick} disabled={isLoading}>
           {isLoading && (
             <RefreshCcw

@@ -6,6 +6,7 @@ const defaultConfig = {
   style: "vivid",
   size: "1024x1024",
   quality: "standard",
+  autoPrompt: true,
 };
 
 export const useImageConfig = createConfig(
