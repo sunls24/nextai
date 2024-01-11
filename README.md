@@ -5,7 +5,7 @@
 支持 ChatGPT **函数调用：**
 
 - Google 搜索 (使用`Programmable Search Engine`)
-- 图像生成 (调用`DALL·E 3`模型)
+- 图像生成 (调用`Stable Diffusion`模型)
 - 浏览网页 (使用`fetch`)
 - 查询天气 (使用高德开放平台)
 

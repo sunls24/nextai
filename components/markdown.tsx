@@ -58,14 +58,16 @@ const Code = React.memo(function Code({
   const { resolvedTheme } = useTheme();
   return !inline ? (
     <div className="hover-trigger relative">
-      <CopyBtn click={copyClick} />
+      <CopyBtn click={copyClick} className={lang && "top-6"} />
       {dot && <DotIcon className="absolute bottom-1 right-1" />}
+      {lang && <Lang lang={lang} />}
       <SyntaxHighlighter
         {...props}
         style={resolvedTheme === "dark" ? oneDark : oneLight}
         customStyle={{
           margin: "0",
-          padding: "10px",
+          padding: "8px",
+          paddingTop: lang ? "25px" : "8px",
           lineHeight: "20px",
           borderRadius: "calc(var(--radius)-2px)",
         }}
@@ -84,15 +86,20 @@ const Code = React.memo(function Code({
 
 const CopyBtn = React.memo(function CopyBtn({
   click,
+  className,
 }: {
   click: MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 }) {
   return (
     <Button
       size="icon"
       variant="ghost"
       onClick={click}
-      className="hover-show absolute right-1 top-1 h-8 w-8 text-foreground"
+      className={clsx(
+        "hover-show absolute right-1 top-1 h-8 w-8 text-foreground",
+        className,
+      )}
     >
       <ClipboardCopy strokeWidth={1.5} size={18} />
     </Button>
@@ -113,5 +120,13 @@ const DotIcon = React.memo(function DotIcon({
       size={20}
       strokeWidth={10}
     />
+  );
+});
+
+const Lang = React.memo(function Lang({ lang }: { lang: string }) {
+  return (
+    <div className="absolute w-full bg-border/50 px-2 py-0.5 text-xs text-muted-foreground">
+      {lang}
+    </div>
   );
 });
