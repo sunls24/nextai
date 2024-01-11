@@ -7,15 +7,18 @@ import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Pencil, RefreshCw, Trash, Copy } from "lucide-react";
 import CommonEdit from "@/components/dialog/common-edit";
+import { DOT_FLAG } from "@/lib/constants";
 
 function ChatMsg({
   index,
+  dot,
   msg,
   reload,
   deleteMsg,
   editMsg,
 }: {
   index: number;
+  dot: boolean;
   msg: Message;
   reload: (() => void) | undefined;
   deleteMsg: ((index: number) => void) | undefined;
@@ -93,7 +96,7 @@ function ChatMsg({
           </Button>
         </div>
         <div className="max-w-full rounded-md border bg-secondary p-2">
-          <Markdown content={msg.content} />
+          <Markdown content={msg.content + (dot ? DOT_FLAG : "")} />
         </div>
         <CreatedAt time={msg.createdAt} />
       </div>

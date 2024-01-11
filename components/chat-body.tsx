@@ -105,6 +105,11 @@ function ChatBody({
                   ? reload
                   : undefined
               }
+              dot={
+                isLoading &&
+                index === messages.length - 1 &&
+                value.role === "assistant"
+              }
             />
             {index === contextIndex - 1 && (
               <Dividers

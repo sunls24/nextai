@@ -10,12 +10,22 @@ import { CodeProps } from "react-markdown/lib/ast-to-react";
 import { copyToClipboard } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { ClipboardCopy } from "lucide-react";
+import { ClipboardCopy, Dot } from "lucide-react";
+import { clsx } from "clsx";
+import { DOT_FLAG } from "@/lib/constants";
 
 function Markdown({ content }: { content: string }) {
   return (
     <ReactMarkdown
-      components={{ code: Code }}
+      components={{
+        code: Code,
+        a: (props) => {
+          if (props.href === "dot") {
+            return <DotIcon className="mb-[2px] inline" />;
+          }
+          return <a {...props} target="_blank" />;
+        },
+      }}
       remarkPlugins={[remarkGfm]}
       className="prose prose-sm prose-zinc max-w-none dark:prose-invert prose-pre:m-0 prose-pre:bg-secondary prose-pre:p-0 prose-pre:text-[15px]"
     >
@@ -37,16 +47,19 @@ const Code = React.memo(function Code({
     () => (/language-(\w+)/.exec(className || "") || [""])[1],
     [className],
   );
-  const content = useMemo(
-    () => String(children).replace(/\n$/, ""),
-    [children],
-  );
+  const [content, dot] = useMemo(() => {
+    if (inline) return ["", false];
+    const content = String(children).replace(/\n$/, "");
+    const dot = content.endsWith(DOT_FLAG);
+    return [dot ? content.slice(0, -DOT_FLAG.length) : content, dot];
+  }, [children]);
   const copyClick = useCallback(() => copyToClipboard(content), [content]);
 
   const { resolvedTheme } = useTheme();
   return !inline ? (
     <div className="hover-trigger relative">
       <CopyBtn click={copyClick} />
+      {dot && <DotIcon className="absolute bottom-1 right-1" />}
       <SyntaxHighlighter
         {...props}
         style={resolvedTheme === "dark" ? oneDark : oneLight}
@@ -83,5 +96,22 @@ const CopyBtn = React.memo(function CopyBtn({
     >
       <ClipboardCopy strokeWidth={1.5} size={18} />
     </Button>
+  );
+});
+
+const DotIcon = React.memo(function DotIcon({
+  className,
+}: {
+  className?: string;
+}) {
+  return (
+    <Dot
+      className={clsx(
+        "animate-[pulse_.6s_cubic-bezier(0.4,0,0.6,1)_infinite] text-foreground",
+        className,
+      )}
+      size={20}
+      strokeWidth={10}
+    />
   );
 });
