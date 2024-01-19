@@ -25,9 +25,8 @@ export async function POST(req: Request) {
       prompt = res.choices[0].message.content;
     }
     delete config.autoPrompt;
-    const response = await (dall
-      ? await getOpenAI(apiKey)
-      : sd2dall
+    const response = await (
+      dall ? await getOpenAI(apiKey) : sd2dall
     ).images.generate({
       ...config,
       prompt: prompt,
