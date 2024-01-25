@@ -58,7 +58,7 @@ const Code = React.memo(function Code({
   const { resolvedTheme } = useTheme();
   return !inline ? (
     <div className="hover-trigger relative">
-      <CopyBtn click={copyClick} className={lang && "top-6"} />
+      <CopyBtn click={copyClick} className={lang && "top-[22px]"} />
       {dot && <DotIcon className="absolute bottom-1 right-1" />}
       {lang && <Lang lang={lang} />}
       <SyntaxHighlighter
@@ -67,7 +67,7 @@ const Code = React.memo(function Code({
         customStyle={{
           margin: "0",
           padding: "8px",
-          paddingTop: lang ? "25px" : "8px",
+          paddingTop: lang ? "28px" : "8px",
           lineHeight: "20px",
           borderRadius: "calc(var(--radius)-2px)",
         }}
@@ -97,7 +97,7 @@ const CopyBtn = React.memo(function CopyBtn({
       variant="ghost"
       onClick={click}
       className={clsx(
-        "hover-show absolute right-1 top-1 h-8 w-8 text-foreground",
+        "hover-show absolute right-0.5 top-0.5 h-8 w-8 text-foreground",
         className,
       )}
     >
