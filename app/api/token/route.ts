@@ -29,16 +29,16 @@ export async function GET(req: Request) {
       if (exp - new Date().getTime() / 1000 > 604800) {
         return key;
       }
-      const res = await fetchForm(`${REVERSE_URL}/api/auth/login`, {
+      const res = await fetchForm(`${REVERSE_URL}/auth/token`, {
         username: email,
         password,
       });
       const result = await res.json();
-      if (result.detail) {
-        errorList.push(`${index}: ${result.detail}`);
+      if (result.msg) {
+        errorList.push(`${index}: ${result.msg}`);
         return key;
       }
-      return result["access_token"] ?? key;
+      return result["accessToken"] ?? key;
     });
 
     await updateOpenAIKeys((await Promise.all(promises)).join(SEPARATOR));
