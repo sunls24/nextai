@@ -13,9 +13,9 @@ export async function POST(req: Request) {
     const dall = isDall(config.model);
     if (!dall && config.autoPrompt) {
       const res = await (
-        await getOpenAI(apiKey)
+        await getOpenAI(apiKey, "gpt-4")
       ).chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         temperature: 0.6,
         messages: [
           { role: "system", content: optimizePrompt },
@@ -50,4 +50,4 @@ function getStyle(style: string) {
 
 const optimizePrompt = `The user will provide a description for image generation, please refine this content. Enhance details and employ precise vocabulary, considering image composition for richer, thereby aiding superior image generation.
 1. Respond only in English.
-2. Maintain brevity, ensuring content doesn't exceed 600 characters.`;
+2. Maintain brevity, ensuring content doesn't exceed 800 characters.`;

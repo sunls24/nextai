@@ -41,22 +41,31 @@ function authHeader(key: string) {
   return `Bearer ${key}`;
 }
 
+const COPILOT_PROXY = process.env.COPILOT_PROXY?.slice(0, -3);
+
 async function x(req: NextRequest) {
-  const auth = req.headers.get("Authorization") ?? authHeader("");
-  return await fetch(
-    `https://api.openai.com${req.nextUrl.pathname.substring(6)}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          auth === X_AUTH ? authHeader(await getNextOpenAI()) : auth,
-      },
-      method: req.method,
-      body: req.body,
-      redirect: "manual",
-      cache: "no-cache",
+  const body = await req.json();
+  let auth = req.headers.get("Authorization") ?? authHeader("");
+  let baseUrl = "https://api.openai.com";
+  if (auth === X_AUTH) {
+    if (body.model?.startsWith("gpt-4")) {
+      auth = authHeader(process.env.GITHUB_TOKEN ?? "");
+      baseUrl = COPILOT_PROXY ?? baseUrl;
+    } else {
+      auth = authHeader(await getNextOpenAI());
+    }
+  }
+
+  return await fetch(`${baseUrl}${req.nextUrl.pathname.substring(6)}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: auth,
     },
-  );
+    method: req.method,
+    body: JSON.stringify(body),
+    redirect: "manual",
+    cache: "no-cache",
+  });
 }
 
 async function g(req: NextRequest) {
