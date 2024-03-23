@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
@@ -45,6 +46,7 @@ export default function RootLayout({
           {children}
           <Toaster richColors position="top-center" />
         </ThemeProvider>
+        {process.env.VERCEL && <Analytics />}
       </body>
     </html>
   );
