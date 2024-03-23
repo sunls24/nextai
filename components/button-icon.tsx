@@ -2,7 +2,7 @@
 import React, { ReactElement } from "react";
 import { GITHUB_URL, VERSION } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRightFromCircle, GithubIcon, Image } from "lucide-react";
+import { Cat, GithubIcon, RotateCcwSquare } from "lucide-react";
 
 function ButtonIcon({
   url,
@@ -20,7 +20,7 @@ function ButtonIcon({
       onClick={() => open(url)}
     >
       {icon}
-      <span className="ml-1 underline-offset-2 group-hover:underline">
+      <span className="ml-1 decoration-[1.3px] underline-offset-4 group-hover:underline">
         {text}
       </span>
     </Button>
@@ -44,7 +44,7 @@ export function HomeButton() {
     <ButtonIcon
       url="/"
       text="去聊天"
-      icon={<ArrowUpRightFromCircle size={18} />}
+      icon={<RotateCcwSquare size={20} strokeWidth={1.8} />}
     />
   );
 }
@@ -54,7 +54,7 @@ export function ImageButton() {
     <ButtonIcon
       url="/image"
       text="文生图"
-      icon={<Image size={20} strokeWidth={1.8} />}
+      icon={<Cat size={20} strokeWidth={1.8} />}
     />
   );
 }

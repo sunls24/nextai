@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import React from "react";
-import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -43,12 +43,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster richColors position="top-center" />
         </ThemeProvider>
-        <Toaster
-          toastOptions={{
-            className: "!bg-background !text-foreground dark:border !max-w-2xl",
-          }}
-        />
       </body>
     </html>
   );

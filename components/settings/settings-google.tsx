@@ -15,13 +15,11 @@ function SettingsGoogle({
 }) {
   const updateConfig = useConfig((state) => state.update);
   const searchEnable = useConfig(
-    (state) => state.apiConfig().plugins?.googleSearch.enabled,
+    (state) => state.apiConfig.plugins.googleSearch.enabled,
   );
 
   function onGSToggle(enabled: boolean) {
-    updateConfig(
-      (c) => (c.apiConfig().plugins!.googleSearch.enabled = enabled),
-    );
+    updateConfig((c) => (c.apiConfig.plugins.googleSearch.enabled = enabled));
   }
 
   return (

@@ -6,16 +6,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { isString } from "@/lib/utils";
-
-export interface SelectInfo {
-  show: string;
-  value: string;
-}
+import { SelectInfo } from "@/lib/constants";
 
 function SelectWarp({
   label,
@@ -29,7 +26,7 @@ function SelectWarp({
 }: {
   label?: string;
   select: string;
-  infoList: string[] | SelectInfo[];
+  infoList: SelectInfo[];
   onValueChange: (v: string) => void;
   className?: string;
   widthClass?: string;
@@ -52,12 +49,14 @@ function SelectWarp({
           </SelectTrigger>
           <SelectContent>
             {infoList.map((info, index) => (
-              <SelectItem
-                key={index}
-                value={isString(info) ? info : info.value}
-              >
-                {isString(info) ? info : info.show}
-              </SelectItem>
+              <SelectGroup key={index}>
+                <SelectLabel>{info.name}</SelectLabel>
+                {info.list.map((item, i) => (
+                  <SelectItem key={i} value={item}>
+                    {item}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             ))}
           </SelectContent>
         </Select>

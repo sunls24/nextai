@@ -3,16 +3,13 @@ import React, { useCallback, useEffect } from "react";
 import ChatBody from "@/components/chat-body";
 import ChatInput from "@/components/chat-input";
 import { useChat } from "ai/react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useChatID, useChatStore } from "@/lib/store/chat";
 import { PROMPT_TOPIC } from "@/lib/constants";
 import { trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
-import { ApiKeyPool } from "@/lib/pool";
-
-const apiKeyPool = new ApiKeyPool();
 
 function Chat() {
   const [savedMessage, saveMessage, editMessage] = useChatStore((state) => [
@@ -50,8 +47,7 @@ function Chat() {
     },
   });
 
-  const config = useConfig((state) => state.apiConfig());
-  const provider = useConfig((state) => state.provider);
+  const apiConfig = useConfig((state) => state.apiConfig);
   const autoTitle = useConfig((state) => state.autoGenerateTitle);
 
   useEffect(() => {
@@ -68,23 +64,19 @@ function Chat() {
     () => ({
       options: {
         body: {
-          provider,
           contextIndex,
           config: {
-            ...config,
-            apiKey: apiKeyPool.update(config.apiKey).getNext(),
-            plugins:
-              config.plugins &&
-              Object.fromEntries(
-                Object.entries(config.plugins).filter(
-                  ([, value]) => value.enabled,
-                ),
+            ...apiConfig,
+            plugins: Object.fromEntries(
+              Object.entries(apiConfig.plugins).filter(
+                ([, value]) => value.enabled,
               ),
+            ),
           },
         },
       },
     }),
-    [config, contextIndex],
+    [apiConfig, contextIndex],
   );
 
   // load message

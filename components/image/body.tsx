@@ -5,14 +5,11 @@ import Result from "@/components/image/result";
 import { useImageConfig } from "@/lib/store/config-image";
 import { fetchPost } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
-import { ApiKeyPool } from "@/lib/pool";
-import toast from "react-hot-toast";
-
-const apiKeyPool = new ApiKeyPool();
+import { toast } from "sonner";
 
 function Body() {
   const config = useImageConfig();
-  const apiKey = useConfig((state) => state.apiConfig().apiKey);
+  const apiKey = useConfig((state) => state.apiConfig.apiKey);
   const [isLoading, setIsLoading] = useState(false);
   const [img, setImg] = useState<string>();
 
@@ -21,9 +18,9 @@ function Body() {
     setIsLoading(true);
     try {
       const res = await fetchPost("/api/image", {
-        apiKey: apiKeyPool.update(apiKey).getNext(),
         config,
         prompt: text,
+        apiKey: apiKey,
       });
       const url = await res.text();
       if (!res.ok) {

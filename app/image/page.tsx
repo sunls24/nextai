@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Body from "@/components/image/body";
 import HeaderSimple from "@/components/header-simple";
-import { Image } from "lucide-react";
+import { Cat } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "文生图",
@@ -19,7 +19,7 @@ export default function Page() {
       <Card className="mx-auto w-[95%] max-w-5xl">
         <HeaderSimple
           title="文生图"
-          icon={<Image size={20} strokeWidth={1.8} />}
+          icon={<Cat size={20} strokeWidth={1.8} />}
         />
         <Separator />
         <Body />

@@ -3,9 +3,8 @@ import { useImageConfig } from "@/lib/store/config-image";
 import SelectWarp from "@/components/select-warp";
 import { Button } from "@/components/ui/button";
 import Textarea from "@/components/textarea";
-import { Box, ImagePlus, Palette, RefreshCcw, Ruler } from "lucide-react";
-import { ImageSelect } from "@/lib/constants";
-import { isDall } from "@/lib/utils";
+import { Box, RefreshCcw } from "lucide-react";
+import { imageModels } from "@/lib/constants";
 import Mounted from "@/components/mounted";
 import SettingsSwitch from "@/components/settings/settings-switch";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,38 +41,11 @@ function Settings({
       <SelectWarp
         label="模型"
         select={config.model}
-        infoList={ImageSelect.model}
+        infoList={imageModels}
         onValueChange={(v) => updateConfig((cfg) => (cfg.model = v))}
         widthClass="w-[150px]"
         disabled={isLoading}
         icon={<Box size={20} strokeWidth={1.8} />}
-      />
-      <SelectWarp
-        label="风格"
-        select={config.style}
-        infoList={ImageSelect.style}
-        onValueChange={(v) => updateConfig((cfg) => (cfg.style = v))}
-        widthClass="w-[130px]"
-        disabled={isLoading || !isDall(config.model)}
-        icon={<Palette size={20} strokeWidth={1.8} />}
-      />
-      <SelectWarp
-        label="尺寸"
-        select={config.size}
-        infoList={ImageSelect.size}
-        onValueChange={(v) => updateConfig((cfg) => (cfg.size = v))}
-        widthClass="w-[130px]"
-        disabled={isLoading || !isDall(config.model)}
-        icon={<Ruler size={20} strokeWidth={1.8} />}
-      />
-      <SelectWarp
-        label="质量"
-        select={config.quality}
-        infoList={ImageSelect.quality}
-        onValueChange={(v) => updateConfig((cfg) => (cfg.quality = v))}
-        widthClass="w-[130px]"
-        disabled={isLoading || !isDall(config.model)}
-        icon={<ImagePlus size={20} strokeWidth={1.8} />}
       />
       <Textarea
         placeholder="生成图像的文字描述，例如：一只可爱的小猫 🐱"
@@ -88,9 +60,10 @@ function Settings({
       />
       <div className="flex items-center justify-between">
         <Mounted fallback={<Skeleton className="h-8 w-32" />}>
-          {isDall(config.model) ? (
+          {config.model === "dall-e-3" && (
             <span className="text-muted-foreground">图片将在一小时后过期</span>
-          ) : (
+          )}
+          {config.model === "stable-diffusion" && (
             <SettingsSwitch
               label="自动优化提示"
               disabled={isLoading}

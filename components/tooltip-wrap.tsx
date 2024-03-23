@@ -17,7 +17,7 @@ function TooltipWrap({
 }) {
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={600}>
+      <Tooltip delayDuration={500}>
         <TooltipTrigger asChild={triggerAsChild}>{trigger}</TooltipTrigger>
         <TooltipContent>{content}</TooltipContent>
       </Tooltip>

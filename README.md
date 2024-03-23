@@ -5,18 +5,14 @@
 支持 ChatGPT **函数调用：**
 
 - Google 搜索 (使用`Programmable Search Engine`)
-- 图像生成 (调用`Stable Diffusion`模型)
-- 浏览网页 (使用`fetch`)
-- 查询天气 (使用高德开放平台)
 
 ## ⚙️ 设置
 
 #### 环境变量
 
-- `OPENAI_API_KEY`：支持设置多个使用`,`分割，轮询策略
-- `GOOGLE_API_KEY`：用于 Google 搜索插件和 Gemini 模型（可选）
+- `OPENAI_API_KEY`：懂得都懂
+- `GOOGLE_API_KEY`：用于 Google 搜索插件（可选）
 - `GOOGLE_ENGINE_ID`：用于 Google 搜索插件（可选）
-- `AMAP_KEY`：高德开放平台 Key（可选）
 
 ## 🚀 本地运行
 

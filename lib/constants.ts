@@ -1,7 +1,5 @@
-export const StoreVersion = 2.2;
-export const VERSION = "2.2.1";
-
-export const REVERSE_URL = process.env.REVERSE_URL;
+export const StoreVersion = 2.3;
+export const VERSION = "2.3.0";
 
 export enum Store {
   Chat = "nextai-chat",
@@ -9,31 +7,20 @@ export enum Store {
   ConfigImage = "nextai-config-image",
 }
 
-export const providerSelect = [
-  { value: "openai", show: "OpenAI" },
-  { value: "google", show: "Google" },
+export interface SelectInfo {
+  name: string;
+  list: string[];
+}
+
+export const models: SelectInfo[] = [
+  { name: "OpenAI", list: ["gpt-3.5-turbo", "gpt-4"] },
+  { name: "Google", list: ["gemini-pro"] },
 ];
 
-export const providerModel: { [key: string]: string[] } = {
-  openai: ["gpt-3.5-turbo", "gpt-4"],
-  google: ["gemini-pro"],
-};
-
-export const ImageSelect = {
-  size: ["1024x1024", "1792x1024", "1024x1792"],
-  model: [
-    { value: "dall-e-3", show: "DALL·E 3" },
-    { value: "stable-diffusion", show: "Stable Diffusion" },
-  ],
-  style: [
-    { value: "vivid", show: "生动" },
-    { value: "natural", show: "自然 / 真实" },
-  ],
-  quality: [
-    { value: "standard", show: "标准" },
-    { value: "hd", show: "高清" },
-  ],
-};
+export const imageModels: SelectInfo[] = [
+  { name: "OpenAI", list: ["dall-e-3"] },
+  { name: "Stability AI", list: ["stable-diffusion"] },
+];
 
 export const GITHUB_URL = "https://github.com/sunls24/nextai";
 

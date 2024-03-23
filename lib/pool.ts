@@ -14,14 +14,13 @@ export class ApiKeyPool {
     return key;
   }
 
-  public update(keys: string, onUpdate?: () => void): ApiKeyPool {
+  public update(keys: string): ApiKeyPool {
     if (keys === this.keys) {
       return this;
     }
     this.keys = keys;
     this.keyList = keys.split(SEPARATOR);
     this.currentIndex = 0;
-    onUpdate?.();
     return this;
   }
 }

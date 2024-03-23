@@ -12,10 +12,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useChat } from "ai/react";
 import { useChatID, useChatStore } from "@/lib/store/chat";
-import { Edit, Trash } from "lucide-react";
+import { CircleFadingPlus, Edit, Trash } from "lucide-react";
 import { clsx } from "clsx";
 import { emitter, mittKey } from "@/lib/mitt";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import CommonEdit from "@/components/dialog/common-edit";
 
 function ChatList({ trigger }: { trigger: React.ReactNode }) {
@@ -79,6 +79,7 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
     }
     setOpen(false);
     setTimeout(newSession);
+    toast.success("已创建新的聊天");
   }
 
   function onDeleteOther() {
@@ -86,8 +87,8 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
       return;
     }
     setOpen(false);
-    toast.success("已删除其他聊天");
     deleteOtherSession();
+    toast.success("已删除其他聊天");
   }
 
   const [open, setOpen] = React.useState(false);
@@ -126,9 +127,10 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
                       title="编辑聊天标题"
                       content={value.topic}
                       rows={1}
-                      updateContent={(topic: string) =>
-                        updateTopic(index, topic)
-                      }
+                      updateContent={(topic: string) => {
+                        updateTopic(index, topic);
+                        toast.success("聊天标题编辑成功");
+                      }}
                       trigger={
                         <Button
                           size="sm"
@@ -157,7 +159,10 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
           })}
         </ScrollArea>
         <div className="flex justify-end gap-2">
-          <Button onClick={onCreate}>新的聊天</Button>
+          <Button onClick={onCreate}>
+            <CircleFadingPlus size={18} className="mr-1" />
+            新的聊天
+          </Button>
           <Button variant="destructive" onClick={onDeleteOther}>
             <Trash size={18} className="mr-1" />
             清除其他

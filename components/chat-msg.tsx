@@ -5,9 +5,10 @@ import Markdown from "@/components/markdown";
 import { ChatGPT } from "@/components/svg";
 import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Pencil, RefreshCw, Trash, Copy } from "lucide-react";
+import { Copy, Pencil, RefreshCw, Trash } from "lucide-react";
 import CommonEdit from "@/components/dialog/common-edit";
 import { DOT_FLAG } from "@/lib/constants";
+import { toast } from "sonner";
 
 function ChatMsg({
   index,
@@ -64,7 +65,10 @@ function ChatMsg({
             <CommonEdit
               title="编辑消息"
               content={msg.content}
-              updateContent={(content) => editMsg(index, content)}
+              updateContent={(content) => {
+                editMsg(index, content);
+                toast.success("消息内容编辑成功");
+              }}
               trigger={
                 <Button
                   variant="outline"

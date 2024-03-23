@@ -1,7 +1,6 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useConfig } from "@/lib/store/config-chat";
 
 function SettingsInput({
   label,

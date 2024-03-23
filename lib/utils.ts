@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,12 +46,4 @@ export async function fetchPost(
     headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify(data),
   });
-}
-
-export function isString(str: any): str is string {
-  return typeof str === "string";
-}
-
-export function isDall(model: string) {
-  return model === "dall-e-3";
 }
