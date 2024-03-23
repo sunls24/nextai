@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectInfo } from "@/lib/constants";
+import { Separator } from "@/components/ui/separator";
 
 function SelectWarp({
   label,
@@ -56,6 +57,9 @@ function SelectWarp({
                     {item}
                   </SelectItem>
                 ))}
+                {index < infoList.length - 1 && (
+                  <Separator className="mx-auto mb-0.5 mt-1 w-11/12" />
+                )}
               </SelectGroup>
             ))}
           </SelectContent>

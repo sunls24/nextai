@@ -129,6 +129,7 @@ function Chat() {
       <ChatInput
         isLoading={isLoading}
         input={input}
+        setInput={setInput}
         handleInputChange={handleInputChange}
         handleSubmit={(e) => handleSubmit(e, getOptions())}
         stop={stop}

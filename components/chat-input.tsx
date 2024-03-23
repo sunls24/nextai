@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, useState } from "react";
 import Textarea from "@/components/textarea";
 import { Button } from "@/components/ui/button";
 import { Archive, PauseCircle, RefreshCcw, SendHorizontal } from "lucide-react";
@@ -7,6 +7,7 @@ import TooltipWrap from "@/components/tooltip-wrap";
 function ChatInput({
   isLoading,
   input,
+  setInput,
   handleInputChange,
   handleSubmit,
   stop,
@@ -14,12 +15,25 @@ function ChatInput({
 }: {
   isLoading: boolean;
   input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
   handleInputChange: ChangeEventHandler<HTMLTextAreaElement>;
   handleSubmit: ChangeEventHandler<HTMLFormElement>;
   stop: () => void;
   updateContext: () => void;
 }) {
+  const [lastInput, setLastInput] = useState<string>();
+
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (
+      !e.nativeEvent.isComposing &&
+      e.key === "ArrowUp" &&
+      !input &&
+      lastInput
+    ) {
+      e.preventDefault();
+      setInput(lastInput);
+      return;
+    }
     if (e.key !== "Enter" || e.nativeEvent.isComposing || e.shiftKey) {
       return;
     }
@@ -28,6 +42,7 @@ function ChatInput({
       return;
     }
     e.currentTarget.form?.requestSubmit();
+    input && setLastInput(input);
   }
 
   return (

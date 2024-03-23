@@ -70,7 +70,7 @@ function ChatBody({
     if (!isLoading) {
       return;
     }
-    const hitBottom = e.scrollTop + e.clientHeight >= e.scrollHeight - 15;
+    const hitBottom = e.scrollTop + e.clientHeight >= e.scrollHeight - 20;
     if (hitBottom === autoScroll) {
       return;
     }
