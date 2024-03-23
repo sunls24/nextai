@@ -17,7 +17,7 @@ function SettingsQuick() {
       <div className="flex flex-col gap-4 md:flex-row md:justify-between">
         <SettingsModel className="md:max-w-xs md:flex-1" />
         <SettingsTemperature className="md:max-w-xs md:flex-1" />
-        <SettingsGoogle className="md:w-[180px]" disabled={true} />
+        <SettingsGoogle className="md:w-[180px]" />
       </div>
     </Card>
   );

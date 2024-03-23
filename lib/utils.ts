@@ -47,3 +47,7 @@ export async function fetchPost(
     body: JSON.stringify(data),
   });
 }
+
+export function toolCall(model: string) {
+  return model.startsWith("gpt-3.5-");
+}

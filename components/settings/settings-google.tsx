@@ -5,14 +5,10 @@ import { useConfig } from "@/lib/store/config-chat";
 import { clsx } from "clsx";
 import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toolCall } from "@/lib/utils";
 
-function SettingsGoogle({
-  disabled = false,
-  className,
-}: {
-  disabled?: boolean;
-  className?: string;
-}) {
+function SettingsGoogle({ className }: { className?: string }) {
+  const disabled = useConfig((state) => !toolCall(state.apiConfig.model));
   const updateConfig = useConfig((state) => state.update);
   const searchEnable = useConfig(
     (state) => state.apiConfig.plugins.googleSearch.enabled,

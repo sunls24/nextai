@@ -17,7 +17,7 @@ function SettingsPlugins({
     <Card className="flex flex-col gap-4 p-4">
       <Label>插件设置</Label>
       <Separator />
-      <SettingsGoogle disabled={true} />
+      <SettingsGoogle />
       {plugins.googleSearch.enabled && (
         <>
           <SettingsInput

@@ -1,5 +1,5 @@
 import { ChatCompletionCreateParams } from "openai/resources/chat/completions";
-import { onFunctionCall, tools } from "@/app/api/chat/tools";
+import { onToolCall, tools } from "@/app/api/chat/tools";
 import { getOpenAI } from "@/app/api/openai";
 import { CreateMessage, OpenAIStream, StreamingTextResponse } from "ai";
 import { getLocaleTime } from "@/lib/utils";
@@ -29,16 +29,24 @@ export async function POST(req: Request) {
       body,
     );
     const stream = OpenAIStream(response, {
-      experimental_onFunctionCall: async (
-        { name, arguments: args },
-        createFunctionCallMessages,
+      experimental_onToolCall: async (
+        toolCallPayload,
+        appendToolCallMessage,
       ) => {
-        args.config = config.plugins[name];
-        const result = await onFunctionCall(name, args);
-        const newMessages = createFunctionCallMessages(result);
+        for (const tool of toolCallPayload.tools) {
+          const { name, arguments: args } = tool.func;
+          args.config = config.plugins[name];
+          const result = await onToolCall(name, args);
+
+          appendToolCallMessage({
+            tool_call_id: tool.id,
+            function_name: name,
+            tool_call_result: result,
+          });
+        }
         return getOpenAI(config.apiKey).chat.completions.create({
           ...body,
-          messages: [...messages, ...newMessages],
+          messages: [...messages, ...appendToolCallMessage()],
         });
       },
     });

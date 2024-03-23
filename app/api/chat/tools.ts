@@ -1,11 +1,11 @@
 import { ChatCompletionTool } from "openai/resources/chat/completions";
 
-interface FunctionCall {
+interface ToolCall {
   tool: ChatCompletionTool;
   call: (name: string, args: Record<string, unknown>) => Promise<any>;
 }
 
-const functionMap: Record<string, FunctionCall> = {
+const toolMap: Record<string, ToolCall> = {
   googleSearch: {
     tool: {
       type: "function",
@@ -47,17 +47,17 @@ const functionMap: Record<string, FunctionCall> = {
   },
 };
 
-export const tools: ChatCompletionTool[] = Object.values(functionMap).map(
+export const tools: ChatCompletionTool[] = Object.values(toolMap).map(
   (value) => value.tool,
 );
 
-export async function onFunctionCall(
+export async function onToolCall(
   name: string,
   args: Record<string, unknown>,
 ): Promise<any> {
-  console.log("- onFunctionCall", name, args);
-  if (!functionMap.hasOwnProperty(name)) {
-    return `${name} function not found`;
+  console.log("- onToolCall", name, args);
+  if (!toolMap.hasOwnProperty(name)) {
+    return `${name} tool not found`;
   }
-  return functionMap[name].call(name, args);
+  return toolMap[name].call(name, args);
 }
