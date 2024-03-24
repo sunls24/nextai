@@ -13,11 +13,13 @@ export async function POST(req: Request) {
   if (contextIndex) {
     messages.splice(0, contextIndex);
   }
-
-  messages.unshift(systemPrompt());
+  if (config.systemPrompt) {
+    messages.unshift(systemPrompt());
+  }
   const body: ChatCompletionCreateParams.ChatCompletionCreateParamsStreaming = {
     stream: true,
     model: config.model,
+    top_p: 1,
     temperature: config.temperature,
     tools: tools.filter((v) => config.plugins[v.function.name]?.enabled),
     messages,

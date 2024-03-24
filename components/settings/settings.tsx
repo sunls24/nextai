@@ -54,6 +54,13 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
                 config.update((cfg) => (cfg.autoGenerateTitle = v))
               }
             />
+            <SettingsSwitch
+              label={"注入系统提示"}
+              checked={config.apiConfig.systemPrompt}
+              onChange={(v) =>
+                config.update((cfg) => (cfg.apiConfig.systemPrompt = v))
+              }
+            />
           </Card>
 
           <SettingsPlugins

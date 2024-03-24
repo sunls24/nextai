@@ -16,6 +16,7 @@ const defaultConfig = {
     apiKey: "",
     model: "gpt-3.5-turbo",
     temperature: 0.5,
+    systemPrompt: true,
     plugins: defaultPlugins,
   },
 };
