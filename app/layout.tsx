@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     default: "NEXT AI",
     template: "%s - NEXT AI",
   },
+  description:
+    "一个简单而优雅的 AI 聊天程序，支持 Google 搜索函数调用, GPT-3.5-Turbo, GPT4, Gemini-Pro",
   appleWebApp: {
     title: "NEXT AI",
   },
