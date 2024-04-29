@@ -12,8 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectInfo } from "@/lib/constants";
 import { Separator } from "@/components/ui/separator";
+import { SelectInfo } from "@/lib/types";
 
 function SelectWarp({
   label,

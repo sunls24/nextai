@@ -1,15 +1,15 @@
+import { SelectInfo, ShortcutItem } from "@/lib/types";
+import translate from "@/components/shortcut/translate";
+import emoji from "@/components/shortcut/emoji";
+
 export const StoreVersion = 2.3;
-export const VERSION = "2.3.0";
+export const VERSION = "2.3.1";
 
 export enum Store {
   Chat = "nextai-chat",
   ConfigChat = "nextai-config-chat",
   ConfigImage = "nextai-config-image",
-}
-
-export interface SelectInfo {
-  name: string;
-  list: string[];
+  ConfigShortcut = "nextai-config-shortcut",
 }
 
 export const models: SelectInfo[] = [
@@ -20,6 +20,11 @@ export const models: SelectInfo[] = [
 export const imageModels: SelectInfo[] = [
   { name: "OpenAI", list: ["dall-e-3"] },
   { name: "Stability AI", list: ["stable-diffusion"] },
+];
+
+export const shortcuts: ShortcutItem[] = [
+  { name: "中英互译", value: "translate", component: translate },
+  { name: "Emoji 搜索", value: "emoji", component: emoji },
 ];
 
 export const GITHUB_URL = "https://github.com/sunls24/nextai";

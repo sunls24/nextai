@@ -3,6 +3,7 @@ import Textarea from "@/components/textarea";
 import { Button } from "@/components/ui/button";
 import { Archive, PauseCircle, RefreshCcw, SendHorizontal } from "lucide-react";
 import TooltipWrap from "@/components/tooltip-wrap";
+import { cn } from "@/lib/utils";
 
 function ChatInput({
   isLoading,
@@ -90,17 +91,19 @@ function ChatInput({
 
 export default ChatInput;
 
-const SendButton = React.memo(function SendButton({
+export const SendButton = React.memo(function SendButton({
   isLoading,
+  className,
 }: {
   isLoading: boolean;
+  className?: string;
 }) {
   return (
     <Button
       type="submit"
       disabled={isLoading}
       size="sm"
-      className="absolute bottom-5 right-5"
+      className={cn("absolute bottom-5 right-5", className)}
     >
       {isLoading ? (
         <RefreshCcw size={20} strokeWidth={1.8} className="animate-spin" />

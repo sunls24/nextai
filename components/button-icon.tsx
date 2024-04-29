@@ -2,16 +2,19 @@
 import React, { ReactElement } from "react";
 import { GITHUB_URL, VERSION } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { Cat, GithubIcon, RotateCcwSquare } from "lucide-react";
+import { Cat, GithubIcon, Layers2, RotateCcwSquare } from "lucide-react";
+import { clsx } from "clsx";
 
 function ButtonIcon({
   url,
   text,
   icon,
+  textClass,
 }: {
   url: string;
   text: string;
   icon: ReactElement;
+  textClass?: string;
 }) {
   return (
     <Button
@@ -20,7 +23,12 @@ function ButtonIcon({
       onClick={() => open(url)}
     >
       {icon}
-      <span className="ml-1 decoration-[1.3px] underline-offset-4 group-hover:underline">
+      <span
+        className={clsx(
+          "ml-1 decoration-[1.3px] underline-offset-4 group-hover:underline",
+          textClass,
+        )}
+      >
         {text}
       </span>
     </Button>
@@ -55,6 +63,18 @@ export function ImageButton() {
       url="/image"
       text="文生图"
       icon={<Cat size={20} strokeWidth={1.8} />}
+      textClass="hidden sm:block"
+    />
+  );
+}
+
+export function ShortcutButton() {
+  return (
+    <ButtonIcon
+      url="/shortcut"
+      text="快捷应用"
+      icon={<Layers2 size={20} strokeWidth={1.8} />}
+      textClass="hidden sm:block"
     />
   );
 }
