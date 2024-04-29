@@ -3,7 +3,7 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useChat } from "ai/react";
 import { useConfig } from "@/lib/store/config-chat";
-import { nanoid } from "ai";
+import { Message } from "ai";
 import { toast } from "sonner";
 import { shortcuts } from "@/lib/constants";
 import { useShortcutConfig } from "@/lib/store/config-shortcut";
@@ -11,9 +11,10 @@ import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function Shortcut() {
-  const { append, messages, setMessages, isLoading } = useChat({
+  const { append, messages, setMessages, isLoading, stop } = useChat({
     onError(err) {
       toast.error(err.message);
+      setMessages([]);
     },
   });
 
@@ -35,19 +36,13 @@ function Shortcut() {
     };
   }
 
-  function onSend(msg: string, systemPrompt: string) {
-    setMessages([
-      {
-        role: "system",
-        content: systemPrompt,
-        id: nanoid(),
-      },
-    ]);
+  function onSend(msg: string, systemMessage: Message[]) {
+    setMessages(systemMessage);
     append({ role: "user", content: msg }, getOptions());
   }
 
-  function getResponse() {
-    if (messages.length === 0) {
+  function getResponse(presetCount: number) {
+    if (messages.length === 0 || messages.length === presetCount) {
       return;
     }
     const last = messages[messages.length - 1];
@@ -61,6 +56,7 @@ function Shortcut() {
       value={config.current}
       className="p-3"
       onValueChange={(tv) => {
+        stop();
         setMessages([]);
         config.update((cfg) => (cfg.current = tv));
       }}
@@ -77,8 +73,8 @@ function Shortcut() {
           <TabsContent key={i} value={v.value} className="mt-3">
             <v.component
               onSend={onSend}
-              response={getResponse()}
               isLoading={isLoading}
+              getResponse={getResponse}
             />
           </TabsContent>
         ))}

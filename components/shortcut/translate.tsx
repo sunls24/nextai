@@ -5,24 +5,29 @@ import { SendButton } from "@/components/chat-input";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import { copyToClipboard } from "@/lib/utils";
+import { Message, nanoid } from "ai";
 
 const systemPrompt =
-  "You are a professional, authentic translation engine. You only return the translated text, please do not explain original text. (Chinese-English bidirectional translation)";
+  "You are a professional, authentic translation engine. You only return the translated text, please do not explain or understand original text. (Chinese-English bidirectional translation)";
 
 function Translate({
-  response,
+  getResponse,
   isLoading,
   onSend,
 }: {
-  response?: string;
   isLoading: boolean;
-  onSend: (msg: string, systemPrompt: string) => void;
+  onSend: (msg: string, systemMessage: Message[]) => void;
+  getResponse: (presetCount: number) => string | undefined;
 }) {
+  const response = getResponse(1);
   const [input, setInput] = useState("");
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    onSend(input, systemPrompt);
+    if (!input) {
+      return;
+    }
+    onSend(input, [{ role: "system", content: systemPrompt, id: nanoid() }]);
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -60,11 +65,10 @@ function Translate({
             <div className="mt-3 flex flex-row-reverse">
               <Button
                 variant="outline"
-                className="h-9 px-3"
+                size="icon"
                 onClick={() => copyToClipboard(response)}
               >
-                <Copy size={16} className="mr-1" />
-                拷贝
+                <Copy size={16} />
               </Button>
             </div>
           )}
