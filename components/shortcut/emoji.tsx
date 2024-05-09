@@ -33,9 +33,9 @@ function Emoji({
 }: {
   isLoading: boolean;
   onSend: (msg: string, systemMessage: Message[]) => void;
-  getResponse: (presetCount: number) => string | undefined;
+  getResponse: () => string | undefined;
 }) {
-  const response = getResponse(systemMessage.length);
+  const response = getResponse();
   const inputRef = useRef<HTMLInputElement>(null);
 
   function onSearch() {

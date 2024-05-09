@@ -12,7 +12,7 @@ export interface ShortcutItem {
   component: (props: {
     isLoading: boolean;
     onSend: (msg: string, systemPrompt: Message[]) => void;
-    getResponse: (presetCount: number) => string | undefined;
+    getResponse: () => string | undefined;
   }) => React.JSX.Element;
 }
 

@@ -17,9 +17,9 @@ function Translate({
 }: {
   isLoading: boolean;
   onSend: (msg: string, systemMessage: Message[]) => void;
-  getResponse: (presetCount: number) => string | undefined;
+  getResponse: () => string | undefined;
 }) {
-  const response = getResponse(1);
+  const response = getResponse();
   const [input, setInput] = useState("");
 
   function onSubmit(e: FormEvent) {

@@ -41,8 +41,8 @@ function Shortcut() {
     append({ role: "user", content: msg }, getOptions());
   }
 
-  function getResponse(presetCount: number) {
-    if (messages.length === 0 || messages.length === presetCount) {
+  function getResponse() {
+    if (messages.length % 2 === 0) {
       return;
     }
     const last = messages[messages.length - 1];
