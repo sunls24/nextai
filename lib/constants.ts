@@ -1,6 +1,4 @@
 import { SelectInfo, ShortcutItem } from "@/lib/types";
-import translate from "@/components/shortcut/translate";
-import emoji from "@/components/shortcut/emoji";
 
 export const StoreVersion = 2.3;
 export const VERSION = "2.3.1";
@@ -23,8 +21,16 @@ export const imageModels: SelectInfo[] = [
 ];
 
 export const shortcuts: ShortcutItem[] = [
-  { name: "中英互译", value: "translate", component: translate },
-  { name: "Emoji 搜索", value: "emoji", component: emoji },
+  { name: "中英互译", value: "translate" },
+  { name: "变量命名", value: "variable" },
+  { name: "Emoji 搜索", value: "emoji" },
+];
+
+export const variableCase = [
+  { value: "lowerCamelCase", name: "小驼峰" },
+  { value: "UpperCamelCase", name: "大驼峰" },
+  { value: "snake_case", name: "下划线" },
+  { value: "kebab-case", name: "短横线" },
 ];
 
 export const GITHUB_URL = "https://github.com/sunls24/nextai";

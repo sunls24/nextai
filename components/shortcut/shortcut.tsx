@@ -9,6 +9,20 @@ import { shortcuts } from "@/lib/constants";
 import { useShortcutConfig } from "@/lib/store/config-shortcut";
 import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
+import dynamic from "next/dynamic";
+import { ShortcutComponent } from "@/lib/types";
+import { RefreshCcw } from "lucide-react";
+
+const dynamicShortcuts = shortcuts.map((v) => {
+  v.component = dynamic(() => import("./" + v.value), {
+    loading: () => (
+      <div className="p-2">
+        <RefreshCcw size={20} strokeWidth={1.8} className="animate-spin" />
+      </div>
+    ),
+  }) as ShortcutComponent;
+  return v;
+});
 
 function Shortcut() {
   const { append, messages, setMessages, isLoading, stop } = useChat({
@@ -69,13 +83,15 @@ function Shortcut() {
             </TabsTrigger>
           ))}
         </TabsList>
-        {shortcuts.map((v, i) => (
+        {dynamicShortcuts.map((v, i) => (
           <TabsContent key={i} value={v.value} className="mt-3">
-            <v.component
-              onSend={onSend}
-              isLoading={isLoading}
-              getResponse={getResponse}
-            />
+            {v.component && (
+              <v.component
+                onSend={onSend}
+                isLoading={isLoading}
+                response={getResponse()}
+              />
+            )}
           </TabsContent>
         ))}
       </Mounted>

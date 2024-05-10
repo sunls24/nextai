@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import { copyToClipboard } from "@/lib/utils";
 import { Message, nanoid } from "ai";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { variableCase } from "@/lib/constants";
+import { Label } from "@/components/ui/label";
+import { useShortcutConfig } from "@/lib/store/config-shortcut";
 
-const systemPrompt =
-  "You are a professional, authentic translation engine. You only return the translated text, please do not explain or understand original text. (Chinese-English bidirectional translation)";
-
-function Translate({
+function Variable({
   response,
   isLoading,
   onSend,
@@ -20,13 +21,23 @@ function Translate({
   onSend: (msg: string, systemMessage: Message[]) => void;
 }) {
   const [input, setInput] = useState("");
+  const [config, updateCfg] = useShortcutConfig((cfg) => [
+    cfg.variable,
+    cfg.update,
+  ]);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!input) {
       return;
     }
-    onSend(input, [{ role: "system", content: systemPrompt, id: nanoid() }]);
+    onSend(input, [
+      {
+        role: "system",
+        content: `Translate the variable name into English and reply according to the ${config.case} rule. Only reply with the variable name, no other content.`,
+        id: nanoid(),
+      },
+    ]);
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -41,10 +52,23 @@ function Translate({
 
   return (
     <>
-      <form className="relative" onSubmit={onSubmit}>
+      <RadioGroup
+        defaultValue={config.case}
+        onValueChange={(v) => updateCfg((cfg) => (cfg.variable.case = v))}
+        className="flex items-center space-x-2 py-1"
+      >
+        {variableCase.map((v, i) => (
+          <div key={i} className="flex space-x-1">
+            <RadioGroupItem value={v.value} id={v.value} />
+            <Label htmlFor={v.value}>{v.name}</Label>
+          </div>
+        ))}
+      </RadioGroup>
+
+      <form className="relative mt-3" onSubmit={onSubmit}>
         <Textarea
           maxRows={10}
-          placeholder="请输入想要翻译的文本"
+          placeholder="请输入中文变量名称"
           disabled={isLoading}
           className="!pr-12"
           autoFocus={true}
@@ -77,4 +101,4 @@ function Translate({
   );
 }
 
-export default Translate;
+export default Variable;

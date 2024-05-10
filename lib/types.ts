@@ -6,14 +6,16 @@ export interface SelectInfo {
   list: string[];
 }
 
+export type ShortcutComponent = (props: {
+  isLoading: boolean;
+  response: string | undefined;
+  onSend: (msg: string, systemPrompt: Message[]) => void;
+}) => React.JSX.Element;
+
 export interface ShortcutItem {
   name: string;
   value: string;
-  component: (props: {
-    isLoading: boolean;
-    onSend: (msg: string, systemPrompt: Message[]) => void;
-    getResponse: () => string | undefined;
-  }) => React.JSX.Element;
+  component?: ShortcutComponent;
 }
 
 export interface EmojiItem {

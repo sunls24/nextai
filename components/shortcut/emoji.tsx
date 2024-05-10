@@ -27,15 +27,14 @@ const systemMessage: Message[] = [
 ];
 
 function Emoji({
-  getResponse,
+  response,
   isLoading,
   onSend,
 }: {
   isLoading: boolean;
   onSend: (msg: string, systemMessage: Message[]) => void;
-  getResponse: () => string | undefined;
+  response: string | undefined;
 }) {
-  const response = getResponse();
   const inputRef = useRef<HTMLInputElement>(null);
 
   function onSearch() {
