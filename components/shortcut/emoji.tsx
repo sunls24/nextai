@@ -87,19 +87,21 @@ function Emoji({
           )}
         </Button>
       </div>
-      <div className="mt-3 flex w-fit flex-wrap justify-between gap-2">
-        {emojis.map((v, i) => (
-          <div
-            key={i}
-            className="flex h-fit w-20 cursor-pointer flex-col items-center gap-1 rounded-md p-1 transition-colors hover:bg-secondary"
-            onClick={() => copyToClipboard(v.value)}
-          >
-            <span className="text-3xl">{v.value}</span>
-            <span className="text-sm text-muted-foreground">{v.name}</span>
-          </div>
-        ))}
-        <div className="flex-1" />
-      </div>
+      {!!emojis.length && (
+        <div className="mt-3 flex w-fit flex-wrap justify-between gap-2">
+          {emojis.map((v, i) => (
+            <div
+              key={i}
+              className="flex h-fit w-20 cursor-pointer flex-col items-center gap-1 rounded-md p-1 transition-colors hover:bg-secondary"
+              onClick={() => copyToClipboard(v.value)}
+            >
+              <span className="text-3xl">{v.value}</span>
+              <span className="text-sm text-muted-foreground">{v.name}</span>
+            </div>
+          ))}
+          <div className="flex-1" />
+        </div>
+      )}
       {!!emojis.length && (
         <div className="mx-auto mt-2 w-fit text-xs italic text-muted-foreground">
           点击表情进行复制

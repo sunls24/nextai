@@ -58,7 +58,7 @@ function Variable({
         className="flex items-center space-x-2 py-1"
       >
         {variableCase.map((v, i) => (
-          <div key={i} className="flex space-x-1">
+          <div key={i} className="flex items-center space-x-1">
             <RadioGroupItem value={v.value} id={v.value} />
             <Label htmlFor={v.value}>{v.name}</Label>
           </div>
