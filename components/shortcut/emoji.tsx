@@ -70,6 +70,7 @@ function Emoji({
       <div className="flex gap-2">
         <Input
           ref={inputRef}
+          disabled={isLoading}
           className="max-w-sm"
           placeholder="请输入关键字进行搜索 🧐"
           onKeyDown={onKeyDown}

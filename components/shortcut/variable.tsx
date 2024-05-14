@@ -53,6 +53,7 @@ function Variable({
   return (
     <>
       <RadioGroup
+        disabled={isLoading}
         defaultValue={config.case}
         onValueChange={(v) => updateCfg((cfg) => (cfg.variable.case = v))}
         className="flex items-center space-x-2 py-1"
