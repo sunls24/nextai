@@ -9,7 +9,10 @@ import { toast } from "sonner";
 
 function Body() {
   const config = useImageConfig();
-  const apiKey = useConfig((state) => state.apiConfig.apiKey);
+  const [apiKey, model] = useConfig((state) => [
+    state.apiConfig.apiKey,
+    state.apiConfig.model,
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [img, setImg] = useState<string>();
 
@@ -19,8 +22,9 @@ function Body() {
     try {
       const res = await fetchPost("/api/image", {
         config,
+        apiKey,
+        model,
         prompt: text,
-        apiKey: apiKey,
       });
       const url = await res.text();
       if (!res.ok) {

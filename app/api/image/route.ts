@@ -4,16 +4,13 @@ import { getOpenAI } from "../openai";
 
 export const runtime = "edge";
 
-const SDClient = new OpenAI({ apiKey: "", baseURL: process.env.SD2DALL });
-
 export async function POST(req: Request) {
-  let { config, apiKey, prompt } = await req.json();
+  let { config, apiKey, prompt, model } = await req.json();
 
-  const isSD = config.model === "stable-diffusion";
   try {
-    if (isSD && config.autoPrompt) {
+    if (config.model === "stable-diffusion" && config.autoPrompt) {
       const res = await getOpenAI(apiKey).chat.completions.create({
-        model: "gpt-4",
+        model,
         temperature: 0.6,
         messages: [
           { role: "system", content: optimizePrompt },
@@ -23,11 +20,10 @@ export async function POST(req: Request) {
       prompt = res.choices[0].message.content;
     }
     delete config.autoPrompt;
-    const response = await (
-      isSD ? SDClient : getOpenAI(apiKey)
-    ).images.generate({
+    const response = await getOpenAI(apiKey).images.generate({
       ...config,
       prompt: prompt,
+      size: "1024x1024",
       n: 1,
     });
     return new NextResponse(response.data[0].url);
