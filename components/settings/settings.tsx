@@ -47,6 +47,12 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             <SettingsModel />
             <SettingsTemperature />
             <Separator />
+            <SettingsInput
+              label="自定义模型"
+              placeholder={`多个使用 , 分隔`}
+              value={config.customModels}
+              onChange={(v) => config.update((cfg) => (cfg.customModels = v))}
+            />
             <SettingsSwitch
               label={"自动生成标题"}
               checked={config.autoGenerateTitle}

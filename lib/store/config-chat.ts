@@ -12,6 +12,7 @@ const defaultPlugins = {
 
 const defaultConfig = {
   autoGenerateTitle: true,
+  customModels: "",
   apiConfig: {
     apiKey: "",
     model: "gpt-3.5-turbo",
