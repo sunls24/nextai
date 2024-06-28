@@ -4,6 +4,7 @@ import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/react";
+import Umami from "@/components/umami";
 
 export const metadata: Metadata = {
   title: {
@@ -49,6 +50,7 @@ export default function RootLayout({
           <Toaster richColors position="top-center" />
         </ThemeProvider>
         {process.env.VERCEL && <Analytics />}
+        <Umami />
       </body>
     </html>
   );
