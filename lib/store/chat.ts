@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { createWithEqualityFn as create } from "zustand/traditional";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { Message, nanoid } from "ai";
+import { Message, generateId } from "ai";
 import {
   AUTO_TOPIC_LENGTH,
   DEFAULT_TOPIC,
@@ -18,7 +18,7 @@ interface ChatSession {
 
 function createEmptySession(): ChatSession {
   return {
-    id: nanoid(),
+    id: generateId(),
     topic: DEFAULT_TOPIC,
     contextIndex: 0,
     messages: [],
@@ -165,4 +165,4 @@ export const useChatStore = create<ChatStore>()(
   ),
 );
 
-export const useChatID = create<string>(() => nanoid());
+export const useChatID = create<string>(() => generateId());
