@@ -1,6 +1,6 @@
 import { createWithEqualityFn as create } from "zustand/traditional";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { Message, generateId } from "ai";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { generateId, Message } from "ai";
 import {
   AUTO_TOPIC_LENGTH,
   DEFAULT_TOPIC,
@@ -52,6 +52,8 @@ interface ChatStore {
   updateContext(contextIndex: number): void;
 
   clearContextHistory(): void;
+
+  resetSession(): void;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -147,6 +149,14 @@ export const useChatStore = create<ChatStore>()(
         const current = get().currentSession();
         current.messages.splice(0, current.contextIndex);
         current.contextIndex = 0;
+        set({ sessions: get().sessions });
+      },
+
+      resetSession() {
+        const current = get().currentSession();
+        current.messages = [];
+        current.contextIndex = 0;
+        current.topic = DEFAULT_TOPIC;
         set({ sessions: get().sessions });
       },
     }),

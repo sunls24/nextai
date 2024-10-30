@@ -1,9 +1,16 @@
 import React, { ChangeEventHandler, useState } from "react";
 import Textarea from "@/components/textarea";
 import { Button } from "@/components/ui/button";
-import { Archive, PauseCircle, RefreshCcw, SendHorizontal } from "lucide-react";
+import {
+  Archive,
+  MessageCircleOff,
+  PauseCircle,
+  RefreshCcw,
+  SendHorizontal,
+} from "lucide-react";
 import TooltipWrap from "@/components/tooltip-wrap";
 import { cn } from "@/lib/utils";
+import { useChatStore } from "@/lib/store/chat";
 
 function ChatInput({
   isLoading,
@@ -22,6 +29,8 @@ function ChatInput({
   stop: () => void;
   updateContext: () => void;
 }) {
+  const resetSession = useChatStore((state) => state.resetSession);
+
   const [lastInput, setLastInput] = useState<string>();
 
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -64,6 +73,23 @@ function ChatInput({
             </Button>
           }
         />
+        {!isLoading && (
+          <TooltipWrap
+            content="重置聊天"
+            triggerAsChild={true}
+            trigger={
+              <Button
+                type="button"
+                className="h-8"
+                size="icon"
+                variant="ghost"
+                onClick={resetSession}
+              >
+                <MessageCircleOff strokeWidth={1.5} size={22} />
+              </Button>
+            }
+          />
+        )}
         {isLoading && (
           <Button
             type="button"
