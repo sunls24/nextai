@@ -6,7 +6,7 @@ import { useChat } from "ai/react";
 import { toast } from "sonner";
 import { useChatID, useChatStore } from "@/lib/store/chat";
 import { PROMPT_TOPIC } from "@/lib/constants";
-import { toolCall, trimTopic } from "@/lib/utils";
+import { trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
@@ -67,13 +67,11 @@ function Chat() {
           contextIndex,
           config: {
             ...apiConfig,
-            plugins: toolCall(apiConfig.model)
-              ? Object.fromEntries(
-                  Object.entries(apiConfig.plugins).filter(
-                    ([, value]) => value.enabled,
-                  ),
-                )
-              : {},
+            plugins: Object.fromEntries(
+              Object.entries(apiConfig.plugins).filter(
+                ([, value]) => value.enabled,
+              ),
+            ),
           },
         },
       },
