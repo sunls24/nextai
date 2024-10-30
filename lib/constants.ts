@@ -1,7 +1,7 @@
 import { SelectInfo, ShortcutItem } from "@/lib/types";
 
 export const StoreVersion = 2.3;
-export const VERSION = "2.3.1";
+export const VERSION = "2.3.2";
 
 export enum Store {
   Chat = "nextai-chat",

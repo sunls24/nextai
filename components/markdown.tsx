@@ -15,6 +15,7 @@ import { clsx } from "clsx";
 import { DOT_FLAG } from "@/lib/constants";
 
 function Markdown({ content }: { content: string }) {
+  content = content.replace(/\n\s+(?=```)/g, "\n");
   return (
     <ReactMarkdown
       components={{

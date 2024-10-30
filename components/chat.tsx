@@ -1,12 +1,12 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ChatBody from "@/components/chat-body";
 import ChatInput from "@/components/chat-input";
 import { useChat } from "ai/react";
 import { toast } from "sonner";
 import { useChatID, useChatStore } from "@/lib/store/chat";
 import { PROMPT_TOPIC } from "@/lib/constants";
-import { trimTopic } from "@/lib/utils";
+import { throttle, trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
@@ -40,6 +40,12 @@ function Chat() {
       input && setInput(input);
     },
   });
+
+  const [slowMessages, setSlowMessages] = useState(messages);
+  const throttleMemo = useMemo(() => throttle(100), []);
+  useEffect(() => {
+    throttleMemo(() => setSlowMessages(messages), messages.length === 0);
+  }, [messages]);
 
   const { append: topicAppend, setMessages: topicSetMessages } = useChat({
     onFinish(msg) {
@@ -119,7 +125,7 @@ function Chat() {
     <div className="flex h-0 flex-1 flex-col">
       <ChatBody
         isLoading={isLoading}
-        messages={messages}
+        messages={slowMessages}
         contextIndex={contextIndex}
         reload={reloadByConfig}
         deleteMsg={deleteMsg}
@@ -134,20 +140,20 @@ function Chat() {
         handleSubmit={(e) => handleSubmit(e, getOptions())}
         stop={stop}
         updateContext={() => {
-          if (messages.length === 0) {
+          if (slowMessages.length === 0) {
             return;
           }
-          if (contextIndex && contextIndex === messages.length) {
+          if (contextIndex && contextIndex === slowMessages.length) {
             updateContext(0);
             return;
           }
           if (isLoading) {
             stop();
-            if (messages.length === 1 && messages[0].role === "user") {
+            if (slowMessages.length === 1 && slowMessages[0].role === "user") {
               return;
             }
           }
-          updateContext(messages.length);
+          updateContext(slowMessages.length);
           emitter.emit(mittKey.SCROLL);
         }}
       />

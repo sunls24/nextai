@@ -47,3 +47,26 @@ export async function fetchPost(
     body: JSON.stringify(data),
   });
 }
+
+export function throttle(delay: number) {
+  let lastTime = 0;
+  let timeout: any;
+  return function (func: () => void, skip: boolean) {
+    if (skip) {
+      func();
+      return;
+    }
+    const execFunc = () => {
+      lastTime = Date.now();
+      func();
+    };
+
+    const diff = Date.now() - lastTime;
+    if (diff >= delay) {
+      execFunc();
+      return;
+    }
+    clearTimeout(timeout);
+    timeout = setTimeout(execFunc, delay - diff);
+  };
+}
