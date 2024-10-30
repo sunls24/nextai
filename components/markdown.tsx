@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ClipboardCopy, Dot } from "lucide-react";
 import { clsx } from "clsx";
 import { DOT_FLAG } from "@/lib/constants";
+import remarkBreaks from "remark-breaks";
 
 function Markdown({ content }: { content: string }) {
   content = content.replace(/\n\s+(?=```)/g, "\n");
@@ -27,7 +28,7 @@ function Markdown({ content }: { content: string }) {
           return <a {...props} target="_blank" />;
         },
       }}
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkBreaks]}
       className="prose prose-sm prose-zinc max-w-none dark:prose-invert prose-pre:m-0 prose-pre:bg-secondary prose-pre:p-0 prose-pre:text-[15px]"
     >
       {content}
