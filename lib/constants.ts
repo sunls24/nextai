@@ -12,7 +12,6 @@ export enum Store {
 
 export const models: SelectInfo[] = [
   { name: "OpenAI", list: ["gpt-3.5-turbo", "gpt-4"] },
-  { name: "Google", list: ["gemini-1.5-pro", "gemini-1.5-flash"] },
 ];
 
 export const imageModels: SelectInfo[] = [
