@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 
 function Header() {
   return (
-    <header className="flex h-12 items-center gap-1 px-4">
+    <header className="flex h-12 items-center gap-1 pl-4 pr-2">
       <HeaderTopic />
       <ChatList
         trigger={
