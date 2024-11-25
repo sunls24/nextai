@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.0.5",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-label": "^2.1.0",
@@ -23,13 +24,12 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@vercel/analytics": "^1.4.1",
     "ai": "^3.4.33",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
     "mitt": "^3.0.1",
     "next": "^15.0.3",
     "next-themes": "^0.3.0",
-    "openai": "^4.73.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "8.0.7",
@@ -38,12 +38,13 @@
     "remark-breaks": "3.0.3",
     "remark-gfm": "3.0.1",
     "sonner": "^1.7.0",
-    "tailwind-merge": "^2.5.4",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^3.23.8",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -52,10 +53,10 @@
     "eslint-config-next": "^15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "postcss": "^8.4.49",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }

@@ -1,63 +1,31 @@
-import { ChatCompletionTool } from "openai/resources/chat/completions";
+import { CoreTool, tool } from "ai";
+import { z } from "zod";
 
-interface ToolCall {
-  tool: ChatCompletionTool;
-  call: (name: string, args: Record<string, unknown>) => Promise<any>;
-}
-
-const toolMap: Record<string, ToolCall> = {
-  googleSearch: {
-    tool: {
-      type: "function",
-      function: {
-        name: "googleSearch",
-        description: "Search the web for information using Google",
-        parameters: {
-          type: "object",
-          properties: {
-            keyword: {
-              type: "string",
-              description: "Keywords for searching",
-            },
-          },
-          required: ["keyword"],
-        },
-      },
-    },
-    call: async (name, args) => {
+export const tools: Record<string, CoreTool> = {
+  googleSearch: tool({
+    description: "using Google to search the internet",
+    parameters: z.object({
+      keyword: z.string().describe("search keyword"),
+    }),
+    execute: async ({ keyword }) => {
+      console.log(`googleSearch: ${keyword}`);
       const nothing = "nothing";
-      const cfg = args.config as any;
-      const apiKey = cfg.apiKey || process.env.GOOGLE_API_KEY;
-      const engineId = cfg.engineId || process.env.GOOGLE_ENGINE_ID;
+      const apiKey = process.env.GOOGLE_API_KEY;
+      const engineId = process.env.GOOGLE_ENGINE_ID;
       if (!apiKey || !engineId) {
-        console.log(`- ${name} apiKey or engineId is empty`);
+        console.log("googleSearch: apiKey or engineId is empty");
         return nothing;
       }
       try {
         const res = await fetch(
-          `https://www.googleapis.com/customsearch/v1?&fields=items(title,link,snippet,pagemap/metatags(og:description))&key=${apiKey}&cx=${engineId}&q=${args.keyword}`,
+          `https://www.googleapis.com/customsearch/v1?&fields=items(title,link,snippet,pagemap/metatags(og:description))&key=${apiKey}&cx=${engineId}&q=${keyword}`,
         );
         const result = await res.json();
         return result.items ?? nothing;
       } catch (err: any) {
-        console.log(`- ${name} ${err.cause ?? err}`);
+        console.log(`googleSearch: ${err.cause ?? err}`);
         return nothing;
       }
     },
-  },
+  }),
 };
-
-export const tools: ChatCompletionTool[] = Object.values(toolMap).map(
-  (value) => value.tool,
-);
-
-export async function onToolCall(
-  name: string,
-  args: Record<string, unknown>,
-): Promise<any> {
-  console.log("- onToolCall", name, args);
-  if (!toolMap.hasOwnProperty(name)) {
-    return `${name} tool not found`;
-  }
-  return toolMap[name].call(name, args);
-}
