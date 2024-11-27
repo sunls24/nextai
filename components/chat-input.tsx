@@ -2,7 +2,6 @@ import React, { ChangeEventHandler, useState } from "react";
 import Textarea from "@/components/textarea";
 import { Button } from "@/components/ui/button";
 import {
-  Archive,
   MessageCircleOff,
   PauseCircle,
   RefreshCcw,
@@ -19,7 +18,6 @@ function ChatInput({
   handleInputChange,
   handleSubmit,
   stop,
-  updateContext,
 }: {
   isLoading: boolean;
   input: string;
@@ -27,7 +25,6 @@ function ChatInput({
   handleInputChange: ChangeEventHandler<HTMLTextAreaElement>;
   handleSubmit: ChangeEventHandler<HTMLFormElement>;
   stop: () => void;
-  updateContext: () => void;
 }) {
   const resetSession = useChatStore((state) => state.resetSession);
 
@@ -58,21 +55,6 @@ function ChatInput({
   return (
     <form onSubmit={handleSubmit} className="relative p-3 pt-1">
       <div className="mb-1.5">
-        <TooltipWrap
-          content="清除上下文"
-          triggerAsChild={true}
-          trigger={
-            <Button
-              type="button"
-              className="h-8"
-              size="icon"
-              variant="ghost"
-              onClick={updateContext}
-            >
-              <Archive strokeWidth={1.5} size={22} />
-            </Button>
-          }
-        />
         {!isLoading && (
           <TooltipWrap
             content="重置聊天"

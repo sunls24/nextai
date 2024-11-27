@@ -9,11 +9,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 function SettingsGoogle({ className }: { className?: string }) {
   const updateConfig = useConfig((state) => state.update);
   const searchEnable = useConfig(
-    (state) => state.apiConfig.plugins.googleSearch.enabled,
+    (state) => state.apiConfig.plugins.googleSearch,
   );
 
   function onGSToggle(enabled: boolean) {
-    updateConfig((c) => (c.apiConfig.plugins.googleSearch.enabled = enabled));
+    updateConfig((c) => (c.apiConfig.plugins.googleSearch = enabled));
   }
 
   return (

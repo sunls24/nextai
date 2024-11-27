@@ -1,12 +1,12 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import ChatBody from "@/components/chat-body";
 import ChatInput from "@/components/chat-input";
 import { useChat } from "ai/react";
 import { toast } from "sonner";
 import { useChatID, useChatStore } from "@/lib/store/chat";
 import { PROMPT_TOPIC } from "@/lib/constants";
-import { throttle, trimTopic } from "@/lib/utils";
+import { trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
@@ -35,17 +35,12 @@ function Chat() {
     stop,
   } = useChat({
     id: useChatID(),
+    experimental_throttle: 100,
     onError(err) {
       toast.error(err.message);
       input && setInput(input);
     },
   });
-
-  const [slowMessages, setSlowMessages] = useState(messages);
-  const throttleMemo = useMemo(() => throttle(100), []);
-  useEffect(() => {
-    throttleMemo(() => setSlowMessages(messages), messages.length === 0);
-  }, [messages]);
 
   const { append: topicAppend, setMessages: topicSetMessages } = useChat({
     onFinish(msg) {
@@ -61,28 +56,18 @@ function Chat() {
     return () => emitter.off(mittKey.STOP_LOADING, stop);
   }, []);
 
-  const [contextIndex, updateContext] = useChatStore((state) => [
-    state.currentSession().contextIndex,
-    state.updateContext,
-  ]);
-
   const getOptions = useCallback(
     () => ({
       options: {
         body: {
-          contextIndex,
           config: {
             ...apiConfig,
-            plugins: Object.fromEntries(
-              Object.entries(apiConfig.plugins).filter(
-                ([, value]) => value.enabled,
-              ),
-            ),
+            plugins: apiConfig.plugins,
           },
         },
       },
     }),
-    [apiConfig, contextIndex],
+    [apiConfig],
   );
 
   // load message
@@ -112,11 +97,8 @@ function Chat() {
       messages.splice(index, 1);
       saveMessage(messages);
       toast.success("消息已删除");
-      if (index < contextIndex) {
-        updateContext(contextIndex - 1);
-      }
     },
-    [messages, contextIndex],
+    [messages],
   );
 
   const reloadByConfig = useCallback(() => reload(getOptions()), [getOptions]);
@@ -125,8 +107,7 @@ function Chat() {
     <div className="flex h-0 flex-1 flex-col">
       <ChatBody
         isLoading={isLoading}
-        messages={slowMessages}
-        contextIndex={contextIndex}
+        messages={messages}
         reload={reloadByConfig}
         deleteMsg={deleteMsg}
         editMsg={editMessage}
@@ -139,23 +120,6 @@ function Chat() {
         handleInputChange={handleInputChange}
         handleSubmit={(e) => handleSubmit(e, getOptions())}
         stop={stop}
-        updateContext={() => {
-          if (slowMessages.length === 0) {
-            return;
-          }
-          if (contextIndex && contextIndex === slowMessages.length) {
-            updateContext(0);
-            return;
-          }
-          if (isLoading) {
-            stop();
-            if (slowMessages.length === 1 && slowMessages[0].role === "user") {
-              return;
-            }
-          }
-          updateContext(slowMessages.length);
-          emitter.emit(mittKey.SCROLL);
-        }}
       />
     </div>
   );

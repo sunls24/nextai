@@ -15,8 +15,6 @@
 - `GOOGLE_API_KEY`：用于 Google 搜索插件（可选）
 - `GOOGLE_ENGINE_ID`：用于 Google 搜索插件（可选）
 
-_Google 的 Gemini 模型需要使用 [OneAPI](https://github.com/songquanpeng/one-api) 进行接口分发_
-
 ## 🚀 本地运行
 
 1. 克隆仓库：

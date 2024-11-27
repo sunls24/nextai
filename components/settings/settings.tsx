@@ -10,7 +10,7 @@ import {
 import { ModeToggle } from "@/components/mode-toggle";
 import { GithubButton } from "@/components/button-icon";
 import SettingsPlugins from "@/components/settings/settings-plugins";
-import { Plugins, useConfig } from "@/lib/store/config-chat";
+import { useConfig } from "@/lib/store/config-chat";
 import SettingsSwitch from "@/components/settings/settings-switch";
 import SettingsInput from "@/components/settings/settings-input";
 import SettingsModel from "@/components/settings/settings-model";
@@ -20,12 +20,6 @@ import { Separator } from "@/components/ui/separator";
 
 function Settings({ trigger }: { trigger: React.ReactNode }) {
   const config = useConfig();
-
-  function updatePlugins(fn: (p: Plugins) => void) {
-    config.update((cfg) => {
-      fn(cfg.apiConfig.plugins as Plugins);
-    });
-  }
 
   return (
     <Sheet>
@@ -69,10 +63,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
             />
           </Card>
 
-          <SettingsPlugins
-            plugins={config.apiConfig.plugins as Plugins}
-            updatePlugins={updatePlugins}
-          />
+          <SettingsPlugins />
         </div>
 
         <div className="flex justify-between">

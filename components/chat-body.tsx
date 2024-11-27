@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatMsg from "@/components/chat-msg";
 import { Message } from "ai";
-import { useChatStore } from "@/lib/store/chat";
-import Dividers from "@/components/dividers";
 import { emitter, mittKey } from "@/lib/mitt";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "lucide-react";
@@ -10,24 +8,18 @@ import { Loader } from "lucide-react";
 function ChatBody({
   isLoading,
   messages,
-  contextIndex,
   reload,
   deleteMsg,
   editMsg,
 }: {
   isLoading: boolean;
   messages: Message[];
-  contextIndex: number;
   reload: () => void;
   deleteMsg: (index: number) => void;
   editMsg: (index: number, content: string) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(false);
-  const [currentIndex, clearContextHistory] = useChatStore((state) => [
-    state.currentIndex,
-    state.clearContextHistory,
-  ]);
 
   useEffect(() => {
     (scrollRef.current!.firstElementChild as HTMLDivElement).style.display =
@@ -47,10 +39,6 @@ function ChatBody({
     }
     scrollTo();
   });
-
-  useEffect(() => {
-    scrollTo();
-  }, [currentIndex]);
 
   function scrollTo() {
     requestAnimationFrame(() => {
@@ -89,16 +77,11 @@ function ChatBody({
             <ChatMsg
               index={index}
               msg={value}
-              deleteMsg={
-                !isLoading && index >= contextIndex ? deleteMsg : undefined
-              }
-              editMsg={
-                !isLoading && index >= contextIndex ? editMsg : undefined
-              }
+              deleteMsg={!isLoading ? deleteMsg : undefined}
+              editMsg={!isLoading ? editMsg : undefined}
               reload={
                 !isLoading &&
                 index === messages.length - 1 &&
-                index >= contextIndex &&
                 (index != 0 || value.role === "user")
                   ? reload
                   : undefined
@@ -109,14 +92,6 @@ function ChatBody({
                 value.role === "assistant"
               }
             />
-            {index === contextIndex - 1 && (
-              <Dividers
-                text="上下文已清除"
-                className="pb-2"
-                hoverText={!isLoading ? "清除历史记录" : undefined}
-                hoverClick={clearContextHistory}
-              />
-            )}
           </div>
         );
       })}

@@ -3,11 +3,7 @@ import { createConfig } from "@/lib/store/config";
 
 export type Plugins = typeof defaultPlugins;
 const defaultPlugins = {
-  googleSearch: {
-    enabled: false,
-    apiKey: "",
-    engineId: "",
-  },
+  googleSearch: false,
 };
 
 const defaultConfig = {

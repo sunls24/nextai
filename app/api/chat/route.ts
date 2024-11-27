@@ -7,10 +7,7 @@ import { NextResponse } from "next/server";
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  const { messages, config, contextIndex } = await req.json();
-  if (contextIndex) {
-    messages.splice(0, contextIndex);
-  }
+  const { messages, config } = await req.json();
 
   try {
     const result = await streamText({
@@ -19,9 +16,9 @@ export async function POST(req: Request) {
       model: getOpenAI(config.apiKey).chat(config.model),
       system: config.systemPrompt ? systemPrompt() : undefined,
       messages: messages,
-      maxSteps: 3,
+      maxSteps: 6,
       tools: Object.fromEntries(
-        Object.entries(tools).filter(([key]) => config.plugins[key]?.enabled),
+        Object.entries(tools).filter(([key]) => config.plugins[key] === true),
       ),
     });
 

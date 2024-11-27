@@ -12,7 +12,6 @@ import {
 interface ChatSession {
   id: string;
   topic: string;
-  contextIndex: number;
   messages: Message[];
 }
 
@@ -20,7 +19,6 @@ function createEmptySession(): ChatSession {
   return {
     id: generateId(),
     topic: DEFAULT_TOPIC,
-    contextIndex: 0,
     messages: [],
   };
 }
@@ -48,10 +46,6 @@ interface ChatStore {
   editMessage(index: number, msg: string): void;
 
   checkAutoTopic(newTopic: () => void): void;
-
-  updateContext(contextIndex: number): void;
-
-  clearContextHistory(): void;
 
   resetSession(): void;
 }
@@ -140,22 +134,9 @@ export const useChatStore = create<ChatStore>()(
         newTopic();
       },
 
-      updateContext(contextIndex: number) {
-        get().currentSession().contextIndex = contextIndex;
-        set({ sessions: get().sessions });
-      },
-
-      clearContextHistory() {
-        const current = get().currentSession();
-        current.messages.splice(0, current.contextIndex);
-        current.contextIndex = 0;
-        set({ sessions: get().sessions });
-      },
-
       resetSession() {
         const current = get().currentSession();
         current.messages = [];
-        current.contextIndex = 0;
         current.topic = DEFAULT_TOPIC;
         set({ sessions: get().sessions });
       },

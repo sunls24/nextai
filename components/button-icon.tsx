@@ -2,7 +2,7 @@
 import React, { ReactElement } from "react";
 import { GITHUB_URL, VERSION } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { Cat, GithubIcon, Layers2, RotateCcwSquare } from "lucide-react";
+import { GithubIcon } from "lucide-react";
 import { clsx } from "clsx";
 
 function ButtonIcon({
@@ -43,38 +43,6 @@ export function GithubButton() {
       url={GITHUB_URL}
       text={`v${VERSION}`}
       icon={<GithubIcon size={20} strokeWidth={1.8} />}
-    />
-  );
-}
-
-export function HomeButton() {
-  return (
-    <ButtonIcon
-      url="/"
-      text="去聊天"
-      icon={<RotateCcwSquare size={20} strokeWidth={1.8} />}
-    />
-  );
-}
-
-export function ImageButton() {
-  return (
-    <ButtonIcon
-      url="/image"
-      text="文生图"
-      icon={<Cat size={20} strokeWidth={1.8} />}
-      textClass="hidden sm:block"
-    />
-  );
-}
-
-export function ShortcutButton() {
-  return (
-    <ButtonIcon
-      url="/shortcut"
-      text="快捷应用"
-      icon={<Layers2 size={20} strokeWidth={1.8} />}
-      textClass="hidden sm:block"
     />
   );
 }

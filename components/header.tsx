@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import HeaderTopic from "@/components/header-topic";
 import ChatList from "@/components/dialog/chat-list";
 import Settings from "@/components/settings/settings";
-import { ImageButton, ShortcutButton } from "@/components/button-icon";
-import { Separator } from "@/components/ui/separator";
 
 function Header() {
   return (
@@ -19,10 +17,6 @@ function Header() {
         }
       />
       <span className="flex-1" />
-      <ShortcutButton />
-      <Separator orientation="vertical" className="mx-1" />
-      <ImageButton />
-      <Separator orientation="vertical" className="mx-1" />
       <Settings
         trigger={
           <Button variant="ghost" size="icon">
