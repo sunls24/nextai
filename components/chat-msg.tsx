@@ -5,7 +5,7 @@ import Markdown from "@/components/markdown";
 import { ChatGPT } from "@/components/svg";
 import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Copy, Pencil, RefreshCw, Trash } from "lucide-react";
+import { Copy, Loader, Pencil, RefreshCw, Trash } from "lucide-react";
 import CommonEdit from "@/components/dialog/common-edit";
 import { DOT_FLAG } from "@/lib/constants";
 import { toast } from "sonner";
@@ -51,7 +51,7 @@ function ChatMsg({
         >
           <ChatAvatar right={right} />
           {!right && <span className="flex-1" />}
-          {reload && (
+          {reload && !msg.toolInvocations && (
             <Button
               variant="outline"
               size="icon"
@@ -61,7 +61,7 @@ function ChatMsg({
               <RefreshCw size={16} />
             </Button>
           )}
-          {editMsg && (
+          {editMsg && !msg.toolInvocations && (
             <CommonEdit
               title="编辑消息"
               content={msg.content}
@@ -90,18 +90,52 @@ function ChatMsg({
               <Trash size={16} />
             </Button>
           )}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={copyClick}
-            className="hover-show h-8 w-8"
-          >
-            <Copy size={16} />
-          </Button>
+          {!msg.toolInvocations && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={copyClick}
+              className="hover-show h-8 w-8"
+            >
+              <Copy size={16} />
+            </Button>
+          )}
         </div>
-        <div className="max-w-full rounded-md border bg-secondary p-2">
-          <Markdown content={msg.content + (dot ? DOT_FLAG : "")} />
-        </div>
+        {msg.content && (
+          <div className="max-w-full rounded-md border bg-secondary p-2">
+            <Markdown content={msg.content + (dot ? DOT_FLAG : "")} />
+          </div>
+        )}
+        {msg.toolInvocations &&
+          msg.toolInvocations.map((tool) => (
+            <div key={tool.toolCallId} className="max-w-full rounded-md border">
+              <div className="flex items-center p-2">
+                <span className="font-medium">谷歌搜索：</span>
+                {tool.args.keyword}
+                {tool.state !== "result" && (
+                  <Loader
+                    size={20}
+                    className="ml-1 inline animate-spin"
+                    strokeWidth={1.5}
+                  />
+                )}
+              </div>
+              {tool.state === "result" && (
+                <div className="space-y-2 border-t p-2">
+                  {tool.result.map((v: any, i: number) => (
+                    <a
+                      key={i}
+                      className="block cursor-pointer underline decoration-transparent underline-offset-4 transition-colors hover:text-blue-400 hover:decoration-blue-400"
+                      href={v.link}
+                      target="_blank"
+                    >
+                      {v.title}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         <CreatedAt time={msg.createdAt} />
       </div>
     </div>
