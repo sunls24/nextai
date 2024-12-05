@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import SettingsModel from "@/components/settings/settings-model";
 import SettingsTemperature from "@/components/settings/settings-temperature";
@@ -14,4 +13,4 @@ function SettingsQuick() {
   );
 }
 
-export default React.memo(SettingsQuick);
+export default SettingsQuick;

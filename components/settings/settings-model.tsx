@@ -1,3 +1,4 @@
+"use client";
 import React, { useMemo } from "react";
 import { useConfig } from "@/lib/store/config-chat";
 import SelectWarp from "@/components/select-warp";
@@ -14,11 +15,15 @@ function SettingsModel({ className }: { className?: string }) {
     if (!customModels) {
       return models;
     }
-    const list = customModels.split(",").filter((str) => !!str);
+
+    const modelsSet = new Set(models.flatMap((v) => v.list));
+    const list = customModels
+      .split(",")
+      .filter((str) => !!str && !modelsSet.has(str));
     if (list.length === 0) {
       return models;
     }
-    return [...models, { name: "Custom", list }];
+    return [...models, { name: "Custom", list: Array.from(new Set(list)) }];
   }, [customModels]);
 
   return (

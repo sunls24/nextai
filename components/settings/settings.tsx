@@ -3,6 +3,7 @@ import React from "react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -27,6 +28,7 @@ function Settings({ trigger }: { trigger: React.ReactNode }) {
       <SheetContent side="right" className="flex w-full flex-col sm:max-w-md">
         <SheetHeader>
           <SheetTitle>设置</SheetTitle>
+          <SheetDescription />
         </SheetHeader>
         <div>
           <Card className="mb-4 flex flex-col gap-4 p-4">

@@ -1,21 +1,21 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ChatBody from "@/components/chat-body";
 import ChatInput from "@/components/chat-input";
 import { useChat } from "ai/react";
 import { toast } from "sonner";
-import { useChatID, useChatStore } from "@/lib/store/chat";
-import { PROMPT_TOPIC } from "@/lib/constants";
+import { useChatStore } from "@/lib/store/chat";
 import { trimTopic } from "@/lib/utils";
 import { useConfig } from "@/lib/store/config-chat";
 import { emitter, mittKey } from "@/lib/mitt";
 import { Separator } from "@/components/ui/separator";
+import { PROMPT_TOPIC } from "@/lib/constants";
 
 function Chat() {
-  const [savedMessage, saveMessage, editMessage] = useChatStore((state) => [
+  const [savedMessage, currentIndex, saveMessage] = useChatStore((state) => [
     state.currentSession().messages,
+    state.currentIndex,
     state.saveMessage,
-    state.editMessage,
   ]);
 
   const [checkAutoTopic, updateCurrentTopic] = useChatStore((state) => [
@@ -34,8 +34,8 @@ function Chat() {
     reload,
     stop,
   } = useChat({
-    id: useChatID(),
-    experimental_throttle: 100,
+    experimental_throttle: 80,
+    streamProtocol: "text",
     onError(err) {
       toast.error(err.message);
       input && setInput(input);
@@ -56,27 +56,14 @@ function Chat() {
     return () => emitter.off(mittKey.STOP_LOADING, stop);
   }, []);
 
-  const getOptions = useCallback(
+  const options = useMemo(
     () => ({
-      options: {
-        body: {
-          config: {
-            ...apiConfig,
-            plugins: apiConfig.plugins,
-          },
-        },
+      body: {
+        config: apiConfig,
       },
     }),
     [apiConfig],
   );
-
-  // load message
-  useEffect(() => {
-    if (messages === savedMessage) {
-      return;
-    }
-    setMessages(savedMessage);
-  }, [savedMessage]);
 
   // save message
   useEffect(() => {
@@ -87,38 +74,48 @@ function Chat() {
     if (autoTitle) {
       checkAutoTopic(() => {
         topicSetMessages(messages);
-        topicAppend({ role: "user", content: PROMPT_TOPIC }, getOptions());
+        // noinspection JSIgnoredPromiseFromCall
+        topicAppend({ role: "user", content: PROMPT_TOPIC }, options);
       });
     }
   }, [isLoading]);
 
-  const deleteMsg = useCallback(
-    (index: number) => {
-      messages.splice(index, 1);
-      saveMessage(messages);
-      toast.success("消息已删除");
-    },
-    [messages],
-  );
+  useEffect(() => {
+    if (isLoading || messages === savedMessage) {
+      return;
+    }
+    setMessages(savedMessage);
+    emitter.emit(mittKey.SCROLL);
+  }, [savedMessage]);
 
-  const reloadByConfig = useCallback(() => reload(getOptions()), [getOptions]);
+  function deleteMsg(index: number) {
+    messages.splice(index, 1);
+    saveMessage(messages);
+    toast.success("消息已删除");
+  }
+
+  function editMsg(index: number, msg: string) {
+    messages[index].content = msg;
+    saveMessage(messages);
+    toast.success("消息内容已编辑");
+  }
 
   return (
     <div className="flex h-0 flex-1 flex-col">
       <ChatBody
-        isLoading={isLoading}
         messages={messages}
-        reload={reloadByConfig}
+        isLoading={isLoading}
+        reload={() => reload(options)}
         deleteMsg={deleteMsg}
-        editMsg={editMessage}
+        editMsg={editMsg}
       />
       <Separator />
       <ChatInput
-        isLoading={isLoading}
         input={input}
         setInput={setInput}
+        isLoading={isLoading}
         handleInputChange={handleInputChange}
-        handleSubmit={(e) => handleSubmit(e, getOptions())}
+        handleSubmit={(e) => handleSubmit(e, options)}
         stop={stop}
       />
     </div>

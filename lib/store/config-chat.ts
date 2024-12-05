@@ -1,7 +1,6 @@
 import { Store, StoreVersion } from "@/lib/constants";
 import { createConfig } from "@/lib/store/config";
 
-export type Plugins = typeof defaultPlugins;
 const defaultPlugins = {
   googleSearch: false,
 };

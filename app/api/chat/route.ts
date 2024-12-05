@@ -4,17 +4,14 @@ import { getLocaleTime } from "@/lib/utils";
 import { tools } from "@/app/api/chat/tools";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 export async function POST(req: Request) {
   const { messages, config } = await req.json();
 
   try {
-    const result = await streamText({
-      topP: 1,
+    const result = streamText({
       temperature: config.temperature,
       model: getOpenAI(config.apiKey).chat(config.model),
-      system: config.systemPrompt ? systemPrompt() : undefined,
+      system: getSystem(config.systemPrompt),
       messages: messages,
       maxSteps: 6,
       tools: Object.fromEntries(
@@ -22,11 +19,15 @@ export async function POST(req: Request) {
       ),
     });
 
-    return result.toDataStreamResponse({
-      getErrorMessage: (err: any) => err.message ?? err.toString(),
-    });
+    return result.toTextStreamResponse();
   } catch (err: any) {
     return new NextResponse(err.message ?? err.toString(), { status: 500 });
+  }
+}
+
+function getSystem(prompt: any) {
+  if (prompt === true) {
+    return systemPrompt();
   }
 }
 
