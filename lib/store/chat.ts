@@ -43,8 +43,6 @@ interface ChatStore {
 
   saveMessage(list: Message[]): void;
 
-  editMessage(index: number, msg: string): void;
-
   checkAutoTopic(newTopic: () => void): void;
 
   resetSession(): void;
@@ -116,13 +114,6 @@ export const useChatStore = create<ChatStore>()(
         set({ sessions: get().sessions });
       },
 
-      editMessage(index: number, msg: string) {
-        const currentSession = get().currentSession();
-        const message = currentSession.messages[index];
-        currentSession.messages[index] = { ...message, content: msg };
-        set({ sessions: get().sessions });
-      },
-
       checkAutoTopic(newTopic: () => void) {
         const currentSession = get().currentSession();
         if (
@@ -155,5 +146,3 @@ export const useChatStore = create<ChatStore>()(
     },
   ),
 );
-
-export const useChatID = create<string>(() => generateId());

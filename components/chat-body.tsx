@@ -4,6 +4,7 @@ import { Message } from "ai";
 import { emitter, mittKey } from "@/lib/mitt";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "lucide-react";
+import Mounted from "@/components/mounted";
 
 function ChatBody({
   isLoading,
@@ -71,30 +72,32 @@ function ChatBody({
       viewportClass="p-2 sm:p-4"
       onScroll={(e) => onScroll(e.currentTarget)}
     >
-      {messages.map((value, index) => {
-        return (
-          <div key={value.id}>
-            <ChatMsg
-              index={index}
-              msg={value}
-              deleteMsg={!isLoading ? deleteMsg : undefined}
-              editMsg={!isLoading ? editMsg : undefined}
-              reload={
-                !isLoading &&
-                index === messages.length - 1 &&
-                (index != 0 || value.role === "user")
-                  ? reload
-                  : undefined
-              }
-              dot={
-                isLoading &&
-                index === messages.length - 1 &&
-                value.role === "assistant"
-              }
-            />
-          </div>
-        );
-      })}
+      <Mounted>
+        {messages.map((value, index) => {
+          return (
+            <div key={value.id}>
+              <ChatMsg
+                index={index}
+                msg={value}
+                deleteMsg={!isLoading ? deleteMsg : undefined}
+                editMsg={!isLoading ? editMsg : undefined}
+                reload={
+                  !isLoading &&
+                  index === messages.length - 1 &&
+                  (index != 0 || value.role === "user")
+                    ? reload
+                    : undefined
+                }
+                dot={
+                  isLoading &&
+                  index === messages.length - 1 &&
+                  value.role === "assistant"
+                }
+              />
+            </div>
+          );
+        })}
+      </Mounted>
       {isLoading && messages[messages.length - 1]?.role === "user" && (
         <Loader className="animate-spin" strokeWidth={1.5} />
       )}

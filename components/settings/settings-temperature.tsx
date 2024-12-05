@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useConfig } from "@/lib/store/config-chat";
 import { Label } from "@/components/ui/label";

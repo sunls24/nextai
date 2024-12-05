@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -10,17 +11,14 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useChat } from "ai/react";
-import { useChatID, useChatStore } from "@/lib/store/chat";
-import { CircleFadingPlus, Edit, Trash } from "lucide-react";
+import { useChatStore } from "@/lib/store/chat";
+import { Edit, ListPlus, Trash } from "lucide-react";
 import { clsx } from "clsx";
 import { emitter, mittKey } from "@/lib/mitt";
 import { toast } from "sonner";
 import CommonEdit from "@/components/dialog/common-edit";
 
 function ChatList({ trigger }: { trigger: React.ReactNode }) {
-  const { isLoading } = useChat({ id: useChatID() });
-
   const [
     sessions,
     currentIndex,
@@ -56,27 +54,25 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
     if (index === currentIndex) {
       return;
     }
-    if (index !== currentIndex && isLoading) {
+    if (index !== currentIndex) {
       emitter.emit(mittKey.STOP_LOADING);
     }
     setTimeout(() => selectSession(index));
   }
 
   function onDelete(index: number) {
-    if (index === currentIndex && isLoading) {
+    if (index === currentIndex) {
       emitter.emit(mittKey.STOP_LOADING);
     }
     if (sessions.length === 1) {
       setOpen(false);
     }
+    setTimeout(() => deleteSession(index));
     toast.success(`${sessions[index].topic} 已删除`);
-    deleteSession(index);
   }
 
   function onCreate() {
-    if (isLoading) {
-      emitter.emit(mittKey.STOP_LOADING);
-    }
+    emitter.emit(mittKey.STOP_LOADING);
     setOpen(false);
     setTimeout(newSession);
     toast.success("已创建新的聊天");
@@ -98,6 +94,7 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
       <SheetContent side="left" className="w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle>聊天列表</SheetTitle>
+          <SheetDescription />
         </SheetHeader>
         <ScrollArea
           className="my-5 h-[80%] rounded-md border"
@@ -160,7 +157,7 @@ function ChatList({ trigger }: { trigger: React.ReactNode }) {
         </ScrollArea>
         <div className="flex justify-end gap-2">
           <Button onClick={onCreate}>
-            <CircleFadingPlus size={18} className="mr-1" />
+            <ListPlus size={18} className="mr-1" />
             新的聊天
           </Button>
           <Button variant="destructive" onClick={onDeleteOther}>

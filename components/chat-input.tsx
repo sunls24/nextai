@@ -10,6 +10,7 @@ import {
 import TooltipWrap from "@/components/tooltip-wrap";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/lib/store/chat";
+import { toast } from "sonner";
 
 function ChatInput({
   isLoading,
@@ -19,8 +20,8 @@ function ChatInput({
   handleSubmit,
   stop,
 }: {
-  isLoading: boolean;
   input: string;
+  isLoading: boolean;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   handleInputChange: ChangeEventHandler<HTMLTextAreaElement>;
   handleSubmit: ChangeEventHandler<HTMLFormElement>;
@@ -65,7 +66,10 @@ function ChatInput({
                 className="h-8"
                 size="icon"
                 variant="ghost"
-                onClick={resetSession}
+                onClick={() => {
+                  resetSession();
+                  toast.success("聊天已重置");
+                }}
               >
                 <MessageCircleOff strokeWidth={1.5} size={22} />
               </Button>

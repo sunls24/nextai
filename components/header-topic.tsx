@@ -1,15 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useChatStore } from "@/lib/store/chat";
 import Mounted from "@/components/mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function HeaderTopic() {
-  const currentTopic = useChatStore((state) => state.currentSession().topic);
-  const [topic, setTopic] = useState(currentTopic);
-  useEffect(() => {
-    topic !== currentTopic && setTopic(currentTopic);
-  }, [currentTopic]);
+  const topic = useChatStore((state) => state.currentSession().topic);
 
   return (
     <Mounted fallback={<Skeleton className="h-6 w-16" />}>

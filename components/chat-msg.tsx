@@ -5,10 +5,10 @@ import Markdown from "@/components/markdown";
 import { ChatGPT } from "@/components/svg";
 import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Copy, Loader, Pencil, RefreshCw, Trash } from "lucide-react";
+import { Copy, Pencil, RefreshCw, Trash } from "lucide-react";
 import CommonEdit from "@/components/dialog/common-edit";
 import { DOT_FLAG } from "@/lib/constants";
-import { toast } from "sonner";
+import ChatTool from "@/components/chat-tool";
 
 function ChatMsg({
   index,
@@ -67,7 +67,6 @@ function ChatMsg({
               content={msg.content}
               updateContent={(content) => {
                 editMsg(index, content);
-                toast.success("消息内容编辑成功");
               }}
               trigger={
                 <Button
@@ -108,33 +107,7 @@ function ChatMsg({
         )}
         {msg.toolInvocations &&
           msg.toolInvocations.map((tool) => (
-            <div key={tool.toolCallId} className="max-w-full rounded-md border">
-              <div className="flex items-center p-2">
-                <span className="font-medium">谷歌搜索：</span>
-                {tool.args.keyword}
-                {tool.state !== "result" && (
-                  <Loader
-                    size={20}
-                    className="ml-1 inline animate-spin"
-                    strokeWidth={1.5}
-                  />
-                )}
-              </div>
-              {tool.state === "result" && (
-                <div className="space-y-2 border-t p-2">
-                  {tool.result.map((v: any, i: number) => (
-                    <a
-                      key={i}
-                      className="block cursor-pointer underline decoration-transparent underline-offset-4 transition-colors hover:text-blue-400 hover:decoration-blue-400"
-                      href={v.link}
-                      target="_blank"
-                    >
-                      {v.title}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ChatTool key={tool.toolCallId} tool={tool} />
           ))}
         <CreatedAt time={msg.createdAt} />
       </div>

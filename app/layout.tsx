@@ -1,10 +1,9 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import React from "react";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from "@vercel/analytics/react";
 import Umami from "@/components/umami";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s - NEXT AI",
   },
   description:
-    "一个简单而优雅的 AI 聊天程序，支持 Google 搜索函数调用, GPT-3.5-Turbo, GPT4, Gemini-Pro",
+    "一个简单而优雅的 AI 聊天程序，支持 Google 搜索工具调用, GPT-3.5-Turbo, GPT4, Tools, Image input",
   appleWebApp: {
     title: "NEXT AI",
   },
@@ -41,15 +40,14 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider
+          enableSystem
           attribute="class"
           defaultTheme="system"
-          enableSystem
           disableTransitionOnChange
         >
           {children}
           <Toaster richColors position="top-center" />
         </ThemeProvider>
-        {process.env.VERCEL && <Analytics />}
         <Umami />
       </body>
     </html>
