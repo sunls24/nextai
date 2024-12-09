@@ -12,6 +12,8 @@ export const models: SelectInfo[] = [
   { name: "OpenAI", list: ["gpt-3.5-turbo", "gpt-4"] },
 ];
 
+export const MODE_TRANSLATE = "translate";
+
 export const GITHUB_URL = "https://github.com/sunls24/nextai";
 
 export const TOPIC_MAX_LENGTH = 12;

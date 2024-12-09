@@ -50,7 +50,10 @@ function Chat() {
   });
 
   const apiConfig = useConfig((state) => state.apiConfig);
-  const autoTitle = useConfig((state) => state.autoGenerateTitle);
+  const [autoTitle, mode] = useConfig((state) => [
+    state.autoGenerateTitle,
+    state.mode,
+  ]);
 
   useEffect(() => {
     emitter.on(mittKey.STOP_LOADING, stop);
@@ -60,10 +63,13 @@ function Chat() {
   const options = useMemo(
     () => ({
       body: {
-        config: apiConfig,
+        config: {
+          ...apiConfig,
+          systemPrompt: mode ? mode : apiConfig.systemPrompt,
+        },
       },
     }),
-    [apiConfig],
+    [apiConfig, mode],
   );
 
   // save message

@@ -2,15 +2,19 @@ import React, { ChangeEventHandler, useState } from "react";
 import Textarea from "@/components/textarea";
 import { Button } from "@/components/ui/button";
 import {
-  MessageCircleOff,
+  Languages,
+  ListRestart,
   PauseCircle,
   RefreshCcw,
   SendHorizontal,
 } from "lucide-react";
-import TooltipWrap from "@/components/tooltip-wrap";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/lib/store/chat";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { useConfig } from "@/lib/store/config-chat";
+import { clsx } from "clsx";
+import { MODE_TRANSLATE } from "@/lib/constants";
 
 function ChatInput({
   isLoading,
@@ -28,6 +32,7 @@ function ChatInput({
   stop: () => void;
 }) {
   const resetSession = useChatStore((state) => state.resetSession);
+  const [mode, update] = useConfig((state) => [state.mode, state.update]);
 
   const [lastInput, setLastInput] = useState<string>();
 
@@ -53,38 +58,52 @@ function ChatInput({
     input && setLastInput(input);
   }
 
+  function onTranslateMode() {
+    update((cfg) => (cfg.mode = mode ? "" : MODE_TRANSLATE));
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="relative p-3 pt-1">
-      <div className="mb-1.5">
+    <form onSubmit={handleSubmit} className="relative p-3 pt-1.5">
+      <div className="mb-1.5 flex items-center gap-1">
+        <Button
+          type="button"
+          className={clsx(
+            "h-8 gap-1 px-2",
+            mode == MODE_TRANSLATE &&
+              "bg-muted-foreground/20 hover:bg-muted-foreground/20",
+          )}
+          size="sm"
+          variant="ghost"
+          onClick={onTranslateMode}
+        >
+          <Languages strokeWidth={1.5} size={22} />
+          翻译模式
+        </Button>
+        <Separator orientation="vertical" className="h-6" />
         {!isLoading && (
-          <TooltipWrap
-            content="重置聊天"
-            triggerAsChild={true}
-            trigger={
-              <Button
-                type="button"
-                className="h-8"
-                size="icon"
-                variant="ghost"
-                onClick={() => {
-                  resetSession();
-                  toast.success("聊天已重置");
-                }}
-              >
-                <MessageCircleOff strokeWidth={1.5} size={22} />
-              </Button>
-            }
-          />
+          <Button
+            type="button"
+            className="h-8 gap-1 px-2"
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              resetSession();
+              toast.success("聊天已重置");
+            }}
+          >
+            <ListRestart strokeWidth={1.5} size={22} />
+            重置聊天
+          </Button>
         )}
         {isLoading && (
           <Button
             type="button"
-            className="h-8"
-            size="icon"
+            className="h-8 gap-1 px-2"
+            size="sm"
             variant="ghost"
             onClick={stop}
           >
-            <PauseCircle strokeWidth={1.5} size={22} />
+            <PauseCircle strokeWidth={1.5} size={22} /> 停止输出
           </Button>
         )}
       </div>
