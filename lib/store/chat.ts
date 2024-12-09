@@ -114,7 +114,7 @@ export const useChatStore = create<ChatStore>()(
         set({ sessions: get().sessions });
       },
 
-      checkAutoTopic(newTopic: () => void) {
+      checkAutoTopic(cb: () => void) {
         const currentSession = get().currentSession();
         if (
           currentSession.topic !== DEFAULT_TOPIC ||
@@ -122,7 +122,7 @@ export const useChatStore = create<ChatStore>()(
         ) {
           return;
         }
-        newTopic();
+        cb();
       },
 
       resetSession() {

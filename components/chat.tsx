@@ -43,6 +43,7 @@ function Chat() {
   });
 
   const { append: topicAppend, setMessages: topicSetMessages } = useChat({
+    streamProtocol: "text",
     onFinish(msg) {
       checkAutoTopic(() => updateCurrentTopic(trimTopic(msg.content)));
     },

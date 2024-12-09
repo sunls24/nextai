@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import HeaderTopic from "@/components/header-topic";
 import ChatList from "@/components/dialog/chat-list";
 import Settings from "@/components/settings/settings";
+import { Separator } from "@/components/ui/separator";
+import ChatNew from "@/components/chat-new";
 
 function Header() {
   return (
@@ -12,10 +14,12 @@ function Header() {
       <ChatList
         trigger={
           <Button variant="ghost" size="icon">
-            <GalleryVertical strokeWidth={1.5} size={20} />
+            <GalleryVertical strokeWidth={1.6} size={20} />
           </Button>
         }
       />
+      <Separator orientation="vertical" className="h-1/2" />
+      <ChatNew />
       <span className="flex-1" />
       <Settings
         trigger={

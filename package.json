@@ -34,7 +34,7 @@
     "react-textarea-autosize": "^8.5.5",
     "remark-breaks": "3.0.3",
     "remark-gfm": "3.0.1",
-    "sonner": "^1.7.0",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "zod": "^3.23.8",
     "zustand": "^5.0.2"
