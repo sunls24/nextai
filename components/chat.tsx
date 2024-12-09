@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import ChatBody from "@/components/chat-body";
 import ChatInput from "@/components/chat-input";
 import { useChat } from "ai/react";
@@ -50,21 +50,26 @@ function Chat() {
   });
 
   const apiConfig = useConfig((state) => state.apiConfig);
-  const autoTitle = useConfig((state) => state.autoGenerateTitle);
+  const [autoTitle, mode] = useConfig((state) => [
+    state.autoGenerateTitle,
+    state.mode,
+  ]);
 
   useEffect(() => {
     emitter.on(mittKey.STOP_LOADING, stop);
     return () => emitter.off(mittKey.STOP_LOADING, stop);
   }, []);
 
-  const options = useMemo(
-    () => ({
+  function getOptions() {
+    return {
       body: {
-        config: apiConfig,
+        config: {
+          ...apiConfig,
+          systemPrompt: mode ? mode : apiConfig.systemPrompt,
+        },
       },
-    }),
-    [apiConfig],
-  );
+    };
+  }
 
   // save message
   useEffect(() => {
@@ -76,7 +81,7 @@ function Chat() {
       checkAutoTopic(() => {
         topicSetMessages(messages);
         // noinspection JSIgnoredPromiseFromCall
-        topicAppend({ role: "user", content: PROMPT_TOPIC }, options);
+        topicAppend({ role: "user", content: PROMPT_TOPIC }, getOptions());
       });
     }
   }, [isLoading]);
@@ -106,7 +111,7 @@ function Chat() {
       <ChatBody
         messages={messages}
         isLoading={isLoading}
-        reload={() => reload(options)}
+        reload={() => reload(getOptions())}
         deleteMsg={deleteMsg}
         editMsg={editMsg}
       />
@@ -116,7 +121,7 @@ function Chat() {
         setInput={setInput}
         isLoading={isLoading}
         handleInputChange={handleInputChange}
-        handleSubmit={(e) => handleSubmit(e, options)}
+        handleSubmit={(e) => handleSubmit(e, getOptions())}
         stop={stop}
       />
     </div>
