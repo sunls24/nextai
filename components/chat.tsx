@@ -34,7 +34,6 @@ function Chat() {
     reload,
     stop,
   } = useChat({
-    experimental_throttle: 80,
     streamProtocol: "text",
     onError(err) {
       toast.error(err.message);

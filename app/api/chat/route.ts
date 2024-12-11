@@ -5,11 +5,16 @@ import { tools } from "@/app/api/chat/tools";
 import { NextResponse } from "next/server";
 import { ERROR_PREFIX, MODE_TRANSLATE } from "@/lib/constants";
 
+const STREAM_INTERVAL = 60;
+const MAX_SIZE = 6;
+
 export async function POST(req: Request) {
   const { messages, config } = await req.json();
 
   try {
+    const controller = new AbortController();
     const { fullStream } = streamText({
+      abortSignal: controller.signal,
       temperature: config.temperature,
       model: getOpenAI(config.apiKey).chat(config.model),
       system: getSystem(config.systemPrompt),
@@ -21,12 +26,33 @@ export async function POST(req: Request) {
       ),
     });
 
+    let intervalId: any;
     const stream = new ReadableStream({
       async start(controller) {
+        let buffer = "";
+        let done = false;
+        intervalId = setInterval(() => {
+          if (buffer.length === 0) {
+            if (done) {
+              clearInterval(intervalId);
+              controller.close();
+            }
+            return;
+          }
+          if (buffer.length <= MAX_SIZE) {
+            controller.enqueue(buffer);
+            buffer = "";
+          } else {
+            const chunk = buffer.slice(0, MAX_SIZE);
+            buffer = buffer.slice(MAX_SIZE);
+            controller.enqueue(chunk);
+          }
+        }, STREAM_INTERVAL);
+
         for await (const part of fullStream) {
           switch (part.type) {
             case "text-delta": {
-              controller.enqueue(part.textDelta);
+              buffer += part.textDelta;
               break;
             }
             case "error": {
@@ -38,7 +64,11 @@ export async function POST(req: Request) {
             }
           }
         }
-        controller.close();
+        done = true;
+      },
+      cancel() {
+        clearInterval(intervalId);
+        controller.abort();
       },
     });
 
