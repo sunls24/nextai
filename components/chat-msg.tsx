@@ -7,7 +7,7 @@ import { copyToClipboard, fmtLocaleTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Copy, Pencil, RefreshCw, Trash } from "lucide-react";
 import CommonEdit from "@/components/dialog/common-edit";
-import { DOT_FLAG } from "@/lib/constants";
+import { DOT_FLAG, ERROR_PREFIX } from "@/lib/constants";
 import ChatTool from "@/components/chat-tool";
 
 function ChatMsg({
@@ -28,12 +28,19 @@ function ChatMsg({
   const right = useMemo(() => msg.role === "user", [msg.role]);
 
   function copyClick() {
-    copyToClipboard(msg.content);
+    copyToClipboard(content);
   }
 
   function deleteClick() {
     deleteMsg?.(index);
   }
+
+  const [content, error] = useMemo(() => {
+    if (msg.content.startsWith(ERROR_PREFIX)) {
+      return [msg.content.slice(ERROR_PREFIX.length), true];
+    }
+    return [msg.content, false];
+  }, [msg.content]);
 
   return (
     <div className={clsx("flex pb-6", right ? "justify-end" : "justify-start")}>
@@ -61,10 +68,10 @@ function ChatMsg({
               <RefreshCw size={16} />
             </Button>
           )}
-          {editMsg && !msg.toolInvocations && (
+          {editMsg && !error && !msg.toolInvocations && (
             <CommonEdit
               title="编辑消息"
-              content={msg.content}
+              content={content}
               updateContent={(content) => {
                 editMsg(index, content);
               }}
@@ -100,9 +107,14 @@ function ChatMsg({
             </Button>
           )}
         </div>
-        {msg.content && (
-          <div className="max-w-full rounded-md border bg-secondary p-2">
-            <Markdown content={msg.content + (dot ? DOT_FLAG : "")} />
+        {content && (
+          <div
+            className={clsx(
+              "max-w-full rounded-md border bg-secondary p-2",
+              error && "border-destructive",
+            )}
+          >
+            <Markdown content={content + (dot ? DOT_FLAG : "")} />
           </div>
         )}
         {msg.toolInvocations &&

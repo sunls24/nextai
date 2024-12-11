@@ -3,24 +3,50 @@ import { streamText } from "ai";
 import { getLocaleTime } from "@/lib/utils";
 import { tools } from "@/app/api/chat/tools";
 import { NextResponse } from "next/server";
-import { MODE_TRANSLATE } from "@/lib/constants";
+import { ERROR_PREFIX, MODE_TRANSLATE } from "@/lib/constants";
 
 export async function POST(req: Request) {
   const { messages, config } = await req.json();
 
   try {
-    const result = streamText({
+    const { fullStream } = streamText({
       temperature: config.temperature,
       model: getOpenAI(config.apiKey).chat(config.model),
       system: getSystem(config.systemPrompt),
       messages: messages,
+      maxRetries: 0,
       maxSteps: 6,
       tools: Object.fromEntries(
         Object.entries(tools).filter(([key]) => config.plugins[key] === true),
       ),
     });
 
-    return result.toTextStreamResponse();
+    const stream = new ReadableStream({
+      async start(controller) {
+        for await (const part of fullStream) {
+          switch (part.type) {
+            case "text-delta": {
+              controller.enqueue(part.textDelta);
+              break;
+            }
+            case "error": {
+              const err = part.error as any;
+              controller.enqueue(
+                ERROR_PREFIX + (err.message ?? err.toString()),
+              );
+              break;
+            }
+          }
+        }
+        controller.close();
+      },
+    });
+
+    return new NextResponse(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
   } catch (err: any) {
     return new NextResponse(err.message ?? err.toString(), { status: 500 });
   }

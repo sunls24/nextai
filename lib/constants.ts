@@ -13,6 +13,7 @@ export const models: SelectInfo[] = [
 ];
 
 export const MODE_TRANSLATE = "translate";
+export const ERROR_PREFIX = "::error::";
 
 export const GITHUB_URL = "https://github.com/sunls24/nextai";
 

@@ -38,7 +38,6 @@ function Chat() {
     streamProtocol: "text",
     onError(err) {
       toast.error(err.message);
-      input && setInput(input);
     },
   });
 
